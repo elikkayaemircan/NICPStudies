@@ -1,13 +1,19 @@
 import ROOT as r
-from decorators import *
+import fnmatch
+#from numpy import sqrt
 
-f = r.TFile('$EOS/events_geo/event_CharmCCDIS_Mar18_newgeo/nu_mu/ship.conical.Genie-TGeant4.root')
+f = r.TFile('$EOS/events_geo/event_CharmCCDIS_Mar18_19brick/part1/nu_mu_bar/ship.conical.Genie-TGeant4.root')
+g = r.TFile('$EOS/events_geo/event_CharmCCDIS_Mar18_19brick/part1/nu_mu_bar/geofile_full.conical.Genie-TGeant4.root')
+
 t = f.cbmsim
+sGeo = g.FAIRGeom
+fGeo = r.gGeoManager
 
-fn = r.TFile('C_nu_mu.root', 'recreate')
+fn = r.TFile('C_nu_mu_bar', 'recreate')
 tn = r.TTree('cret', 'Charm related events')
 
 Energy = r.std.vector(float)()
+P = r.std.vector(float)()
 Px = r.std.vector(float)()
 Py = r.std.vector(float)()
 Pz = r.std.vector(float)()
@@ -19,6 +25,7 @@ VertexInfo = r.std.vector(int)()
 IntInGeo = r.std.vector(bool)()
 
 tn.Branch('Energy', Energy)
+tn.Branch('P', P)
 tn.Branch('Px', Px)
 tn.Branch('Py', Py)
 tn.Branch('Pz', Pz)
@@ -39,6 +46,7 @@ for event in xrange(nEnt):
 	TrackNo= 0
 
 	Energy.clear()
+	P.clear()
 	Px.clear()
 	Py.clear()
 	Pz.clear()
@@ -56,6 +64,7 @@ for event in xrange(nEnt):
 			if (track.GetMotherId() == -1):
 				VertexInfo.push_back(0)
 				Energy.push_back(track.GetEnergy())
+				P.push_back(track.GetP())
 				Px.push_back(track.GetPx())
 				Py.push_back(track.GetPy())
 				Pz.push_back(track.GetPz())
@@ -68,6 +77,7 @@ for event in xrange(nEnt):
 			if (track.GetMotherId() == NuTrack):
 				VertexInfo.push_back(1)
 				Energy.push_back(track.GetEnergy())
+				P.push_back(track.GetP())
 				Px.push_back(track.GetPx())
 				Py.push_back(track.GetPy())
 				Pz.push_back(track.GetPz())
@@ -75,9 +85,9 @@ for event in xrange(nEnt):
 				StartX.push_back(track.GetStartX())
 				StartY.push_back(track.GetStartY())
 				StartZ.push_back(track.GetStartZ())
-				if (track.GetPdgCode() == 411 or track.GetPdgCode() == 421 or track.GetPdgCode() == 431 or track.GetPdgCode() == 4122):
+				if (track.GetPdgCode() == -411 or track.GetPdgCode() == -421 or track.GetPdgCode() == -431 or track.GetPdgCode() == -4122):
 					CharmTrack = TrackNo
-					if (-45. < track.GetStartX() < 45. and -37. < track.GetStartY() < 37. and -3345. < track.GetStartZ() < -3045.):
+					if (fnmatch.fnmatch((fGeo.FindNode(track.GetStartX(), track.GetStartY(), track.GetStartZ()).GetName()), 'Lead*')):
 						IntInGeo.push_back(True)
 					else:
 						IntInGeo.push_back(False)
@@ -89,6 +99,7 @@ for event in xrange(nEnt):
 			if (track.GetMotherId() == CharmTrack):
 				VertexInfo.push_back(2)
 				Energy.push_back(track.GetEnergy())
+				P.push_back(track.GetP())
 				Px.push_back(track.GetPx())
 				Py.push_back(track.GetPy())
 				Pz.push_back(track.GetPz())
