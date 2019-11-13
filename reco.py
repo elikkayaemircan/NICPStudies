@@ -16,6 +16,7 @@ StartX = r.std.vector(float)()
 StartY = r.std.vector(float)()
 StartZ = r.std.vector(float)()
 VertexInfo = r.std.vector(int)()
+IntInGeo = r.std.vector(bool)()
 
 tn.Branch('Energy', Energy)
 tn.Branch('Px', Px)
@@ -26,6 +27,7 @@ tn.Branch('StartX', StartX)
 tn.Branch('StartY', StartY)
 tn.Branch('StartZ', StartZ)
 tn.Branch('VertexInfo', VertexInfo)
+tn.Branch('IntInGeo', IntInGeo)
 
 nEnt = t.GetEntries()
 t.GetEntry(0)
@@ -45,6 +47,7 @@ for event in xrange(nEnt):
 	StartY.clear()
 	StartZ.clear()
 	VertexInfo.clear()
+	IntInGeo.clear()
 
 	for track in mcT:
 
@@ -74,6 +77,10 @@ for event in xrange(nEnt):
 				StartZ.push_back(track.GetStartZ())
 				if (track.GetPdgCode() == 411 or track.GetPdgCode() == 421 or track.GetPdgCode() == 431 or track.GetPdgCode() == 4122):
 					CharmTrack = TrackNo
+					if (-45. < track.GetStartX() < 45. and -37. < track.GetStartY() < 37. and -3345. < track.GetStartZ() < -3045.):
+						IntInGeo.push_back(True)
+					else:
+						IntInGeo.push_back(False)
 
 		try: CharmTrack
 		except NameError:

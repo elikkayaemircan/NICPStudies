@@ -19,31 +19,24 @@ for event in xrange(nEnt):
 	mom4_lept = r.TLorentzVector(0., 0., 0., 0.)
 	mom4_hshow = r.TLorentzVector(0., 0., 0., 0.)
 	cret.GetEntry(event)
-	for vtx in xrange(cret.Energy.size()):
-		if (cret.VertexInfo.at(vtx) == 0):
-			mom4_nu += r.TLorentzVector(cret.Px.at(vtx), cret.Py.at(vtx), cret.Pz.at(vtx), cret.Energy.at(vtx))
-			mom4_nucl += r.TLorentzVector(0., 0., 0., 0.938)
-		if (cret.VertexInfo.at(vtx) == 1):
-			if (cret.PdgCode.at(vtx) == 13):
-				mom4_lept += r.TLorentzVector(cret.Px.at(vtx), cret.Py.at(vtx), cret.Pz.at(vtx), cret.Energy.at(vtx))
-			#elif (cret.PdgCode.at(vtx) != 22):
-				#mom4_hshow += r.TLorentzVector(cret.Px.at(vtx), cret.Py.at(vtx), cret.Pz.at(vtx), cret.Energy.at(vtx))
-			else:
-				#print cret.PdgCode.at(vtx)
-				mom4_hshow += r.TLorentzVector(cret.Px.at(vtx), cret.Py.at(vtx), cret.Pz.at(vtx), cret.Energy.at(vtx))
+	if (cret.IntInGeo.at(0)):
+		for vtx in xrange(cret.VertexInfo.size()):
+			if (cret.VertexInfo.at(vtx) == 0):
+				mom4_nu += r.TLorentzVector(cret.Px.at(vtx), cret.Py.at(vtx), cret.Pz.at(vtx), cret.Energy.at(vtx))
+				mom4_nucl += r.TLorentzVector(0., 0., 0., 0.938)
+			if (cret.VertexInfo.at(vtx) == 1):
+				if (cret.PdgCode.at(vtx) == 13):
+					mom4_lept += r.TLorentzVector(cret.Px.at(vtx), cret.Py.at(vtx), cret.Pz.at(vtx), cret.Energy.at(vtx))
+				else:
+					mom4_hshow += r.TLorentzVector(cret.Px.at(vtx), cret.Py.at(vtx), cret.Pz.at(vtx), cret.Energy.at(vtx))
 
-	BjorX1 = 2*(mom4_nu*mom4_lept)/(2*(mom4_nucl*(mom4_nu-mom4_lept)))
-	#print BjorX1
-	#BjorX2 = 2*(mom4_hshow*mom4_nucl)/(2*(mom4_nucl*(mom4_hshow-mom4_nucl)))
-	#print BjorX2
+		BjorX1 = 2*(mom4_nu*mom4_lept)/(2*(mom4_nucl*(mom4_nu-mom4_lept)))
+		InelY1 = (mom4_nucl*(mom4_nu - mom4_lept))/(mom4_nucl*mom4_nu)
 
-	InelY1 = (mom4_nucl*(mom4_nu - mom4_lept))/(mom4_nucl*mom4_nu)
-	#print InelY1
-	#InelY2 = (mom4_nucl*(mom4_hshow - mom4_nucl))/(mom4_nucl*mom4_nu)
-	#print InelY2
-
-	h1.Fill(BjorX1)
-	h2.Fill(InelY1)
+		h1.Fill(BjorX1)
+		h2.Fill(InelY1)
+	else:
+		pass
 
 h1.Draw()
 c.Print('Bjor_nu_mu.pdf')
