@@ -12,16 +12,23 @@ nu_b1 = []      #Event id's in first bin
 nu_b2 = []      #Event id's in second bin
 nu_b3 = []      #Event id's in third bin
 
+ne_b1 = 0
+ne_b2 = 0
+ne_b3 = 0
+
 for i in range (len(energy_mu)):
     if (10. <  energy_mu[i] < 37.5):
         mu_b1.append(energy_mu[i])
         nu_b1.append(En_mu[i])
+        ne_b1 += 1
     if (37.5 < energy_mu[i] < 65.):
         mu_b2.append(energy_mu[i])
         nu_b2.append(En_mu[i])
+        ne_b2 += 1
     if (65. < energy_mu[i] < 150.):
         mu_b3.append(energy_mu[i])
         nu_b3.append(En_mu[i])
+        ne_b3 += 1
 
 mean_b1 = np.mean(mu_b1)
 mean_b2 = np.mean(mu_b2)
@@ -39,15 +46,15 @@ for bin in (mu_b3):
     xi_b3.append(mean_b3)
 
 file=open('energy_nu_mu_output.txt', 'w')
-file.write('Event ID' + '       ' + 'Energy' + '        ' + '<E> of the bin' + '\n')
+file.write('Event ID' + '       ' + 'Energy' + '        ' + '<E> of the bin' + '    ' + '# of events in that bin' + '\n')
 for event in range(len(xi_b1)):
-    file.write('{:5}    {:15}   {:15}'.format(nu_b1[event], mu_b1[event], xi_b1[event]))
+	file.write('{:5}    {:15}   {:15}	{:10}'.format(nu_b1[event], mu_b1[event], xi_b1[event], ne_b1))
     file.write('\n')
 for event in range(len(xi_b2)):
-    file.write('{:5}    {:15}   {:15}'.format(nu_b2[event], mu_b2[event], xi_b2[event]))
+    file.write('{:5}    {:15}   {:15}	{:10}'.format(nu_b2[event], mu_b2[event], xi_b2[event], ne_b2))
     file.write('\n')
 for event in range(len(xi_b3)):
-    file.write('{:5}    {:15}   {:15}'.format(nu_b3[event], mu_b3[event], xi_b3[event]))
+    file.write('{:5}    {:15}   {:15}	{:10}'.format(nu_b3[event], mu_b3[event], xi_b3[event], ne_b3))
     file.write('\n')
 file.close()
 

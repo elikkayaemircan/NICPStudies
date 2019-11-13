@@ -6,7 +6,9 @@ from array import array
 r.gROOT.ProcessLine('.L cret.C')
 
 cret_ch = r.TChain('cret', 'cret')
-cret_ch.Add('C_nu_mu_bar.root')
+cret_ch.Add('events/C_nu_mu_bar_p0.root')
+cret_ch.Add('events/C_nu_mu_bar_p1.root')
+cret_ch.Add('events/C_nu_mu_bar_p2.root')
 
 cret = r.cret(cret_ch)
 
