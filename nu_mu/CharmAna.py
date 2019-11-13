@@ -1,5 +1,6 @@
 import ROOT as r
 import rootUtils as ut
+import argparse
 
 from numpy import arctan, sqrt
 from physlib import *
@@ -10,7 +11,19 @@ cret_ch = r.TChain('cret', 'cret')
 cret_ch.Add('nu_mu.root')
 cret = r.cret(cret_ch)
 
-g = r.TFile('/eos/experiment/ship/user/eelikkaya/events_geo/event_CharmCCDIS_Jul18/nu_mu/0/geofile_full.conical.Genie-TGeant4.root')      
+def init():
+  ap = argparse.ArgumentParser(
+      description='Run Charm Analysis')
+  ap.add_argument('-w', '--work_dir', type=str, help="work space path", dest='work_dir', default=None)
+  args = ap.parse_args()
+  return args
+
+args = init() #to get the options
+
+work_dir = args.work_dir
+nof = args.nof
+
+g = r.TFile(work_dir+'/geofile_full.conical.Genie-TGeant4.root')
 sGeo = g.FAIRGeom
 fGeo = r.gGeoManager
 
@@ -127,7 +140,7 @@ def makePlots():
   ut.bookCanvas(h,key='FractionAnalysis',title='Produced Charmed Hadron Fractions',nx=1920,ny=1080,cx=1,cy=1)
   cv = h['FractionAnalysis'].cd(1)
   h['charm_fraction'].Draw()
-  h['FractionAnalysis'].Print('~/analysis_v2/nu_mu/cfraction.pdf')
+  h['FractionAnalysis'].Print(work_dir+'/histo/cfraction.pdf')
 
 def ChannelDecision(CDauPdg): #CharmDaughterPDG
   HadronCount = 0
@@ -678,18 +691,18 @@ print '====END OF THE RESULTS===='
 
 makePlots()
 
-#h['slope'].Draw()
-#h['slope_acc'].Draw("same")
-#h['slope_acc'].Sumw2
-
-#h['test'].Divide(h['slope_acc'], h['slope'], 1., 1., "B")
-#h['test'].Draw()
-
-#total = h['slope'].Integral()
-#selected = h['slope_acc'].Integral()
-#print selected/total*100
-
 '''
+h['slope'].Draw()
+h['slope_acc'].Draw("same")
+h['slope_acc'].Sumw2
+
+h['test'].Divide(h['slope_acc'], h['slope'], 1., 1., "B")
+h['test'].Draw()
+
+total = h['slope'].Integral()
+selected = h['slope_acc'].Integral()
+print selected/total*100
+
 note1 = r.TLatex(0.25, 2000, "~23.42%")
 note2 = r.TLatex(1.25, 2000, "~50.86%")
 note3 = r.TLatex(2.25, 2000, "~12.37%")
