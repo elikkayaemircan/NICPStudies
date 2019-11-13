@@ -1,5 +1,5 @@
 import ROOT as r
-import argparse
+import argparse, os
 
 def init():
   ap = argparse.ArgumentParser(
@@ -8,6 +8,7 @@ def init():
   ap.add_argument('--input_path', type=str, help="input directory path", dest='input_path', default=None)
   ap.add_argument('--geo_file', type=str, help="geometry file", dest='geo_file', default=None)
   ap.add_argument('-n', type=int, help="number of ROOT files to handle", dest='n_files', default=None)
+  ap.add_argument('--flavor', type=str, help="flavor name", dest='flav', default=None)
   args = ap.parse_args()
   return args
 
@@ -17,8 +18,11 @@ work_dir = args.work_dir
 input_path = args.input_path
 geo_file = args.geo_file
 n_files = args.n_files
+flav = args.flav
 
-fn = r.TFile(work_dir+'/nu_mu.root', 'recreate')
+foldList = os.listdir(input_path)
+
+fn = r.TFile(work_dir+'/'+flav+'.root', 'recreate')
 tn = r.TTree('cret', 'Charm related events')
 
 Energy = r.std.vector(float)()
@@ -45,8 +49,22 @@ tn.Branch('StartZ', StartZ)
 tn.Branch('VertexInfo', VertexInfo)
 tn.Branch('IntInGeo', IntInGeo)
 
-CharmedHadron = [411, 421, 431, 4122]
-Lepton = [13]
+Charm = [411, 421, 431, 4122]
+AntiCharm = [-411, -421, -431, -4122]
+
+if "_bar" not in flav:
+    CharmedHadron = Charm
+else:
+    CharmedHadron = AntiCharm
+
+if flav == "nu_e":
+    Lepton = [11]
+elif flav == "nu_mu":
+    Lepton = [13]
+elif flav == "nu_e_bar":
+    Lepton = [-11]
+elif flav == "nu_mu_bar":
+    Lepton = [-13]
 
 g = r.TFile(geo_file)
 sGeo = g.FAIRGeom
@@ -54,10 +72,9 @@ fGeo = r.gGeoManager
 
 for d in xrange(n_files):
 
-  d = str(d)
   print 'Processing event file in the the folder:', d
 
-  f = r.TFile(input_path+'/'+d+'/ship.conical.Genie-TGeant4.root')
+  f = r.TFile(input_path+'/'+foldList[d]+'/ship.conical.Genie-TGeant4.root')
 
   try: t = f.cbmsim
   except AttributeError: 'The file in the directory '+d+' is broken!'

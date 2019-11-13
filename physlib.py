@@ -43,3 +43,12 @@ def Multiplicity(PdgArr, RArr):
       if PdgArr[i] not in RArr:
         Mult += 1
     return Mult
+
+def Bjorken(Nu4P, Lept4P, Nucl4P):
+    Bjor = 2*(Nu4P*Lept4P)/(2*(Nucl4P*(Nu4P-Lept4P)))
+    return Bjor
+
+def Inelasticity(Nu4P, Lept4P, Nucl4P):
+    Inel = (Nucl4P*(Nu4P - Lept4P))/(Nucl4P*Nu4P)
+    return Inel
+
