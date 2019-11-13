@@ -4,15 +4,15 @@ import argparse
 def init():
   ap = argparse.ArgumentParser(
       description='Run the dummy builder')
-  ap.add_argument('-w', '--work_dir', type=str, help="work space path", dest='work_dir', default=None)
-  ap.add_argument('-n', '--numb', type=int, help="number of ROOT files to handle", dest='nof', default=None)
+  ap.add_argument('--work_dir', type=str, help="work space path", dest='work_dir', default=None)
+  ap.add_argument('-n', type=int, help="number of ROOT files to handle", dest='n_files', default=None)
   args = ap.parse_args()
   return args
 
 args = init() #to get the options
 
 work_dir = args.work_dir
-nof = args.nof
+n_files = args.n_files
 
 fn = r.TFile(work_dir+'/nu_mu.root', 'recreate')
 tn = r.TTree('cret', 'Charm related events')
@@ -44,13 +44,14 @@ tn.Branch('IntInGeo', IntInGeo)
 CharmedHadron = [411, 421, 431, 4122]
 Lepton = [13]
 
-for d in xrange(nof):
+g = r.TFile(work_dir+'/geofile_full.conical.Genie-TGeant4.root')
+
+for d in xrange(n_files):
 
   d = str(d)
   print d
 
   f = r.TFile(work_dir+'/nu_mu/'+d+'/ship.conical.Genie-TGeant4.root')
-  g = r.TFile(work_dir+'/nu_mu/'+d+'/geofile_full.conical.Genie-TGeant4.root')
 
   t = f.cbmsim
   sGeo = g.FAIRGeom

@@ -1,6 +1,20 @@
 import ROOT as r
+import argparse
 
-fn = r.TFile('/afs/cern.ch/user/e/eelikkay/analysis_v2/nu_mu_bar/nu_mu_bar.root', 'recreate')
+def init():
+  ap = argparse.ArgumentParser(
+      description='Run the dummy builder')
+  ap.add_argument('--work_dir', type=str, help="work space path", dest='work_dir', default=None)
+  ap.add_argument('-n', type=int, help="number of ROOT files to handle", dest='n_files', default=None)
+  args = ap.parse_args()
+  return args
+
+args = init() #to get the options
+
+work_dir = args.work_dir
+n_files = args.n_files
+
+fn = r.TFile(work_dir+'/nu_mu_bar.root', 'recreate')
 tn = r.TTree('cret', 'Charm related events')
 
 Energy = r.std.vector(float)()
@@ -30,124 +44,125 @@ tn.Branch('IntInGeo', IntInGeo)
 CharmedHadron = [-411, -421, -431, -4122]
 Lepton = [-13]
 
-for d in xrange(100):
+g = r.TFile(work_dir+'/geofile_full.conical.Genie-TGeant4.root')
 
-    d = str(d)
-    print d
+for d in xrange(n_files):
 
-    f = r.TFile('/eos/experiment/ship/user/eelikkaya/events_geo/event_CharmCCDIS_Jul18/nu_mu_bar/'+d+'/ship.conical.Genie-TGeant4.root')
-    g = r.TFile('/eos/experiment/ship/user/eelikkaya/events_geo/event_CharmCCDIS_Jul18/nu_mu_bar/'+d+'/geofile_full.conical.Genie-TGeant4.root')
+  d = str(d)
+  print d
 
-    t = f.cbmsim
-    sGeo = g.FAIRGeom
-    fGeo = r.gGeoManager
+  f = r.TFile(work_dir+'/nu_mu_bar/'+d+'/ship.conical.Genie-TGeant4.root')
 
-    nEnt = t.GetEntries()
-    t.GetEntry(0)
-    mcT = t.MCTrack
+  t = f.cbmsim
+  sGeo = g.FAIRGeom
+  fGeo = r.gGeoManager
 
-    for event in xrange(nEnt):
+  nEnt = t.GetEntries()
+  t.GetEntry(0)
+  mcT = t.MCTrack
 
-        t.GetEntry(event)
-        TrackNo= 0
+  for event in xrange(nEnt):
 
-        Energy.clear()
-        P.clear()
-        Px.clear()
-        Py.clear()
-        Pz.clear()
-        PdgCode.clear()
-        StartX.clear()
-        StartY.clear()
-        StartZ.clear()
-        VertexInfo.clear()
-        IntInGeo.clear()
+    t.GetEntry(event)
+    TrackNo= 0
 
-        for track in mcT:
+    Energy.clear()
+    P.clear()
+    Px.clear()
+    Py.clear()
+    Pz.clear()
+    PdgCode.clear()
+    StartX.clear()
+    StartY.clear()
+    StartZ.clear()
+    VertexInfo.clear()
+    IntInGeo.clear()
 
-            try: NuTrack
-            except NameError:
-                if (track.GetMotherId() == -1):
-                    VertexInfo.push_back(0)
-                    Energy.push_back(track.GetEnergy())
-                    P.push_back(track.GetP())
-                    Px.push_back(track.GetPx())
-                    Py.push_back(track.GetPy())
-                    Pz.push_back(track.GetPz())
-                    PdgCode.push_back(track.GetPdgCode())
-                    StartX.push_back(track.GetStartX())
-                    StartY.push_back(track.GetStartY())
-                    StartZ.push_back(track.GetStartZ())
-                    NuTrack = TrackNo
-            else:
-                if (track.GetMotherId() == NuTrack):
-                    VertexInfo.push_back(1)
-                    Energy.push_back(track.GetEnergy())
-                    P.push_back(track.GetP())
-                    Px.push_back(track.GetPx())
-                    Py.push_back(track.GetPy())
-                    Pz.push_back(track.GetPz())
-                    PdgCode.push_back(track.GetPdgCode())
-                    X = track.GetStartX()
-                    Y = track.GetStartY()
-                    Z = track.GetStartZ()
-                    StartX.push_back(X)
-                    StartY.push_back(Y)
-                    StartZ.push_back(Z)
-                    fGeo.SetCurrentPoint(X, Y, Z)
-                    fGeo.FindNode()
-                    if fGeo.GetCurrentVolume().GetName() == "Lead" or fGeo.GetCurrentVolume().GetName() == "Emulsion":
-                        IntInGeo.push_back(True)
-                    else:
-                        IntInGeo.push_back(False)
-                    if track.GetPdgCode() in Lepton:
-                        LeptonTrack = TrackNo
-                    if track.GetPdgCode() in CharmedHadron:
-                        CharmTrack = TrackNo
+    for track in mcT:
 
-            try: LeptonTrack
-            except NameError:
-            	pass
-            else:
-                if (track.GetMotherId() == LeptonTrack):
-                    VertexInfo.push_back(21)
-                    Energy.push_back(track.GetEnergy())
-                    P.push_back(track.GetP())
-                    Px.push_back(track.GetPx())
-                    Py.push_back(track.GetPy())
-                    Pz.push_back(track.GetPz())
-                    PdgCode.push_back(track.GetPdgCode())
-                    StartX.push_back(track.GetStartX())
-                    StartY.push_back(track.GetStartY())
-                    StartZ.push_back(track.GetStartZ())
+      try: NuTrack
+      except NameError:
+        if (track.GetMotherId() == -1):
+          VertexInfo.push_back(0)
+          Energy.push_back(track.GetEnergy())
+          P.push_back(track.GetP())
+          Px.push_back(track.GetPx())
+          Py.push_back(track.GetPy())
+          Pz.push_back(track.GetPz())
+          PdgCode.push_back(track.GetPdgCode())
+          StartX.push_back(track.GetStartX())
+          StartY.push_back(track.GetStartY())
+          StartZ.push_back(track.GetStartZ())
+          NuTrack = TrackNo
+      else:
+        if (track.GetMotherId() == NuTrack):
+          VertexInfo.push_back(1)
+          Energy.push_back(track.GetEnergy())
+          P.push_back(track.GetP())
+          Px.push_back(track.GetPx())
+          Py.push_back(track.GetPy())
+          Pz.push_back(track.GetPz())
+          PdgCode.push_back(track.GetPdgCode())
+          X = track.GetStartX()
+          Y = track.GetStartY()
+          Z = track.GetStartZ()
+          StartX.push_back(X)
+          StartY.push_back(Y)
+          StartZ.push_back(Z)
+          fGeo.SetCurrentPoint(X, Y, Z)
+          fGeo.FindNode()
+          if fGeo.GetCurrentVolume().GetName() == "Lead" or fGeo.GetCurrentVolume().GetName() == "Emulsion":
+            IntInGeo.push_back(True)
+          else:
+            IntInGeo.push_back(False)
+          if track.GetPdgCode() in Lepton:
+            LeptonTrack = TrackNo
+          if track.GetPdgCode() in CharmedHadron:
+            CharmTrack = TrackNo
 
-            try: CharmTrack
-            except NameError:
-            	pass
-            else:
-                if (track.GetMotherId() == CharmTrack):
-                    VertexInfo.push_back(22)
-                    Energy.push_back(track.GetEnergy())
-                    P.push_back(track.GetP())
-                    Px.push_back(track.GetPx())
-                    Py.push_back(track.GetPy())
-                    Pz.push_back(track.GetPz())
-                    PdgCode.push_back(track.GetPdgCode())
-                    StartX.push_back(track.GetStartX())
-                    StartY.push_back(track.GetStartY())
-                    StartZ.push_back(track.GetStartZ())
+      try: LeptonTrack
+      except NameError:
+      	pass
+      else:
+        if (track.GetMotherId() == LeptonTrack):
+          VertexInfo.push_back(21)
+          Energy.push_back(track.GetEnergy())
+          P.push_back(track.GetP())
+          Px.push_back(track.GetPx())
+          Py.push_back(track.GetPy())
+          Pz.push_back(track.GetPz())
+          PdgCode.push_back(track.GetPdgCode())
+          StartX.push_back(track.GetStartX())
+          StartY.push_back(track.GetStartY())
+          StartZ.push_back(track.GetStartZ())
 
-            TrackNo += 1
+      try: CharmTrack
+      except NameError:
+      	pass
+      else:
+        if (track.GetMotherId() == CharmTrack):
+          VertexInfo.push_back(22)
+          Energy.push_back(track.GetEnergy())
+          P.push_back(track.GetP())
+          Px.push_back(track.GetPx())
+          Py.push_back(track.GetPy())
+          Pz.push_back(track.GetPz())
+          PdgCode.push_back(track.GetPdgCode())
+          StartX.push_back(track.GetStartX())
+          StartY.push_back(track.GetStartY())
+          StartZ.push_back(track.GetStartZ())
 
-        del TrackNo
-        del NuTrack
-        del CharmTrack
+      TrackNo += 1
 
-        try: LeptonTrack
-        except NameError: pass
-        else: del LeptonTrack
+    del TrackNo
+    del NuTrack
+    del CharmTrack
 
-        tn.Fill()
+    try: LeptonTrack
+    except NameError: pass
+    else: del LeptonTrack
+
+    tn.Fill()
 
 fn.Write()
 fn.Close()

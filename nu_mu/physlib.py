@@ -25,3 +25,10 @@ def ImpactParameter(trackPos, trackMom, targetPos):
         dist += (targetPos[i]-trackPos[i]-t*trackMom[i]/trackMom[3])**2
     IP = r.TMath.Sqrt(dist)
     return IP
+
+def Multiplicity(PdgArr, RArr):
+    Mult = 0
+    for i in range(len(PdgArr)):
+      if PdgArr[i] not in RArr:
+        Mult += 1
+    return Mult
