@@ -28,19 +28,8 @@ nEnt = t.fChain.GetEntries()
 inGeo, tGS, tLS, tDSS = 0., 0., 0., 0.
 d_plus, d_zero, ds_plus, lambda_c = 0., 0., 0., 0.
 CCounter = [d_plus, d_zero, ds_plus, lambda_c]
-
-'''
-NOP0 = 0.
-NOP1 = 0.
-NOP2 = 0.
-NOP3 = 0.
-NOP4 = 0.
-NOP5 = 0.
-NOP6 = 0.
-NOP7 = 0.
-NOP8 = 0.
-NOP9 = 0.
-'''
+d_plusS, d_zeroS, ds_plusS, lambda_cS = 0., 0., 0., 0.
+CCounterS = [d_plusS, d_zeroS, ds_plusS, lambda_cS]
 
 Hadron = [-130, -211, -321, -2212, 130, 211, 321, 2212]
 Lepton = [-11, -13, -15, 11, 13, 15]
@@ -50,6 +39,9 @@ Chargeless = [-14, 22, 111, 130, 421, 2112]
 
 h = {}
 ut.bookHist(h, 'charm_fraction', 'Charm Fractions', 4, 0, 4)
+ut.bookHist(h, 'charm_fractionS', 'Charm Fractions (Selected)', 4, 0, 4)
+ut.bookHist(h, 'gC1nuE', 'Incoming Neutrino Energy Spectrum #nu_#mu', 80, 0, 400)
+ut.bookHist(h, 'gC1nuES', 'Incoming Neutrino Energy Spectrum #nu_#mu (Selected)', 80, 0, 400)
 ut.bookHist(h, 'gC1E', 'Charmed Hadron Energy Spectrum D+', 20, 0, 100)
 ut.bookHist(h, 'gC1ES', 'Charmed Hadron Energy Spectrum D+ (Selected)', 20, 0, 100)
 ut.bookHist(h, 'gC2E', 'Charmed Hadron Energy Spectrum D0', 20, 0, 100)
@@ -82,6 +74,8 @@ ut.bookHist(h, 'gC3M2', 'Charmed Hadron Multiplicity at Secondary Vertex Ds+', 8
 ut.bookHist(h, 'gC3M2S', 'Charmed Hadron Multiplicity at Secondary Vertex Ds+ (Selected)', 8, 0, 8)
 ut.bookHist(h, 'gC4M2', 'Charmed Hadron Multiplicity at Secondary Vertex Lc+', 8, 0, 8)
 ut.bookHist(h, 'gC4M2S', 'Charmed Hadron Multiplicity at Secondary Vertex Lc+ (Selected)', 8, 0, 8)
+ut.bookHist(h, 'lC1nuE', 'Incoming Neutrino Energy Spectrum #nu_#mu', 80, 0, 400)
+ut.bookHist(h, 'lC1nuES', 'Incoming Neutrino Energy Spectrum #nu_#mu (Selected)', 80, 0, 400)
 ut.bookHist(h, 'lC1E', 'Charmed Hadron Energy Spectrum D+', 20, 0, 100)
 ut.bookHist(h, 'lC1ES', 'Charmed Hadron Energy Spectrum D+ (Selected)', 20, 0, 100)
 ut.bookHist(h, 'lC2E', 'Charmed Hadron Energy Spectrum D0', 20, 0, 100)
@@ -113,7 +107,9 @@ ut.bookHist(h, 'lC2M2S', 'Charmed Hadron Multiplicity at Secondary Vertex D0 (Se
 ut.bookHist(h, 'lC3M2', 'Charmed Hadron Multiplicity at Secondary Vertex Ds+', 8, 0, 8)
 ut.bookHist(h, 'lC3M2S', 'Charmed Hadron Multiplicity at Secondary Vertex Ds+ (Selected)', 8, 0, 8)
 ut.bookHist(h, 'lC4M2', 'Charmed Hadron Multiplicity at Secondary Vertex Lc+', 8, 0, 8)
-ut.bookHist(h, 'lC4M2S', 'Charmed Hadron Multiplicity at Secondary Vertex Lc+ (Selected)', 8, 8, 8)
+ut.bookHist(h, 'lC4M2S', 'Charmed Hadron Multiplicity at Secondary Vertex Lc+ (Selected)', 8, 0, 8)
+ut.bookHist(h, 'dC1nuE', 'Incoming Neutrino Energy Spectrum #nu_#mu', 80, 0, 400)
+ut.bookHist(h, 'dC1nuES', 'Incoming Neutrino Energy Spectrum #nu_#mu (Selected)', 80, 0, 400)
 ut.bookHist(h, 'dC1E', 'Charmed Hadron Energy Spectrum D+', 20, 0, 100)
 ut.bookHist(h, 'dC1ES', 'Charmed Hadron Energy Spectrum D+ (Selected)', 20, 0, 100)
 ut.bookHist(h, 'dC2E', 'Charmed Hadron Energy Spectrum D0', 20, 0, 100)
@@ -122,7 +118,7 @@ ut.bookHist(h, 'dC3E', 'Charmed Hadron Energy Spectrum Ds+', 20, 0, 100)
 ut.bookHist(h, 'dC3ES', 'Charmed Hadron Energy Spectrum Ds+ (Selected)', 20, 0, 100)
 ut.bookHist(h, 'dC4E', 'Charmed Hadron Energy Spectrum Lc+', 20, 0, 100)
 ut.bookHist(h, 'dC4ES', 'Charmed Hadron Energy Spectrum Lc+ (Selected)', 20, 0, 100)
-ut.bookHist(h, 'dC1FL', 'Charmed Hadron Flight Length D+', 200, 0, 1)
+ut.bookHist(h, 'dC1FL', 'Charmed Hadron Flight Length D+', 100, 0, 1)
 ut.bookHist(h, 'dC1FLS', 'Charmed Hadron Flight Length D+ (Selected)', 100, 0, 1)
 ut.bookHist(h, 'dC2FL', 'Charmed Hadron Flight Length D0', 100, 0, 1)
 ut.bookHist(h, 'dC2FLS', 'Charmed Hadron Flight Length D0 (Selected)', 100, 0, 1)
@@ -229,10 +225,15 @@ def CharmFraction(CharmPDG, h, CCounter):
 def makePlots():
   ut.bookCanvas(h,key='FractionAnalysis',title='Produced Charmed Hadron Fractions',nx=1920,ny=1080,cx=1,cy=1)
   cv = h['FractionAnalysis'].cd(1)
+  r.gStyle.SetOptStat(0)
   h['charm_fraction'].Draw()
+  h['charm_fractionS'].SetFillStyle(3335)
+  h['charm_fractionS'].SetFillColor(2)
+  h['charm_fractionS'].Draw('same')
   h['FractionAnalysis'].Print(work_dir+'/histo/cfraction.pdf')
   ut.bookCanvas(h,key='gEnergyAnalysis',title='Produced Charmed Hadron Energies',nx=1920,ny=1080,cx=2,cy=2)
   cv = h['gEnergyAnalysis'].cd(1)
+  r.gStyle.SetOptStat(1111)
   h['gC1E'].Draw()
   h['gC1ES'].SetFillStyle(3335)
   h['gC1ES'].SetFillColor(2)
@@ -500,6 +501,15 @@ def makePlots():
   h['dC4M2S'].Draw('same')
   h['dMultAnalysis2'].Print(work_dir+'/histo/dcmult2.pdf')
 
+def make_testPlots():
+  ut.bookCanvas(h,key='nuEnergy',title='Incoming Neutrino Beam Energy',nx=1920,ny=1080,cx=1,cy=1)
+  cv = h['nuEnergy'].cd(1)
+  h['gC1nuE'].Draw()
+  h['dC1nuE'].SetFillStyle(3335)
+  h['dC1nuE'].SetFillColor(2)
+  h['dC1nuES'].Draw('same')
+  h['nuEnergy'].Print(work_dir+'/histo/nuenergy.pdf')
+
 def Eff(Arr):
   try:
     res = float(Arr.count(True))/float(len(Arr))
@@ -629,9 +639,13 @@ for event in xrange(nEnt):
     PriVertexPdg = []
     LS = []
     DSS = []
+    nuEnergy = 0.
     delProng = False
 
     for vtx in xrange(t.VertexInfo.size()):
+
+      if t.VertexInfo.at(vtx) == 0:
+        nuEnergy = t.Energy.at(vtx)
 
       if t.VertexInfo.at(vtx) == 1:
         Pos = []
@@ -652,7 +666,6 @@ for event in xrange(nEnt):
           CMom.append(t.Pz.at(vtx))
           CMom.append(t.P.at(vtx))
           CPdg = Pdg
-          #CharmFraction(CPdg, h['charm_fraction'], CCounter)
           CEnergy = t.Energy.at(vtx)
         if LocationSelection(Mom, Pdg):
           LS.append(True)
@@ -690,32 +703,10 @@ for event in xrange(nEnt):
     if CPdg == 421 and NOP not in [0, 2, 4, 6]:
       delProng = True
 
-      '''
-      if NOP == 0:
-        NOP0 += 1
-      if NOP == 1:
-        NOP1 += 1
-      if NOP == 2:
-        NOP2 += 1
-      if NOP == 3:
-        NOP3 += 1
-      if NOP == 4:
-        NOP4 += 1
-      if NOP == 5:
-        NOP5 += 1
-      if NOP == 6:
-        NOP6 += 1
-      if NOP == 7:
-        NOP7 += 1
-      if NOP == 8:
-        NOP8 += 1
-      if NOP == 9:
-        NOP9 += 1
-      '''
-
     if not delProng:
 
       CharmFraction(CPdg, h['charm_fraction'], CCounter)
+      h['gC1nuE'].Fill(nuEnergy)
       inGeo += 1.
 
       if CPdg == 411:
@@ -837,6 +828,9 @@ for event in xrange(nEnt):
               h['dC4FLS'].Fill(fl)
               h['dC4MS'].Fill(MultPri)
               h['dC4M2S'].Fill(MultSec)
+
+            CharmFraction(CPdg, h['charm_fractionS'], CCounterS)
+            h['gC1nuES'].Fill(nuEnergy)
 
       if ch == 10:
         if GeometrySelection(Pos):
@@ -1401,9 +1395,9 @@ for event in xrange(nEnt):
     else:
       continue
 
-print '*********************************************************************************************************'
-print '*                                                                                                       *'
-print '*********************************************************************************************************'
+print '********************************************************************************************************'
+print '*                                                                                                      *'
+print '********************************************************************************************************'
 
 print '       0 Prong   1 Prong   2 Prong   3 Prong   4 Prong   5 Prong   6 Prong   7 Prong   8 Prong   9 Prong'
 
@@ -1459,9 +1453,9 @@ print 'Lc+ |  %s   %s   %s   %s   %s   %s   %s   %s   %s   %s' %(   \
   Eff(C4P9g)
 )
 
-print '********************************************************************** Geometry Selection Success %.5f' %(tGS/inGeo)
+print '********************************************************************* Geometry Selection Success %.5f' %(tGS/inGeo)
 
-print '*********************************************************************************************************'
+print '********************************************************************************************************'
 
 print '       0 Prong   1 Prong   2 Prong   3 Prong   4 Prong   5 Prong   6 Prong   7 Prong   8 Prong   9 Prong'
 
@@ -1519,7 +1513,7 @@ print 'Lc+ |  %s   %s   %s   %s   %s   %s   %s   %s   %s   %s' %(   \
 
 print '********************************************************************* Location Selection Success %.5f' %(tLS/inGeo)
 
-print '*********************************************************************************************************'
+print '********************************************************************************************************'
 
 print '       0 Prong   1 Prong   2 Prong   3 Prong   4 Prong   5 Prong   6 Prong   7 Prong   8 Prong   9 Prong'
 
@@ -1575,9 +1569,9 @@ print 'Lc+ |  %s   %s   %s   %s   %s   %s   %s   %s   %s   %s' %(   \
   Eff(C4P9d)
 )
 
-print '****************************************************************** Decay Search Selection Success %.5f' %(tDSS/inGeo)
+print '***************************************************************** Decay Search Selection Success %.5f' %(tDSS/inGeo)
 
-print '*********************************************************************************************************'
+print '********************************************************************************************************'
 
 C1Fr = CCounter[0]/sum(CCounter)
 C2Fr = CCounter[1]/sum(CCounter)
@@ -1589,26 +1583,11 @@ print 'D+  |  %.4f' %C1Fr
 print 'D0  |  %.4f' %C2Fr
 print 'Ds+ |  %.4f' %C3Fr
 print 'Lc+ |  %.4f' %C4Fr
-print '********************************************************************* Associated Charmed Hadron Fractions'
+print '******************************************************************** Associated Charmed Hadron Fractions'
 
-print '*********************************************************************************************************'
-print '*                                                                                                       *'
-print '*********************************************************************************************************'
-
-'''
-testtot = float(NOP0 + NOP1 + NOP2 + NOP3 + NOP4 + NOP5 + NOP6 + NOP7 + NOP8 + NOP9)
-
-print '0 Prong', NOP0/testtot
-print '1 Prong', NOP1/testtot
-print '2 Prong', NOP2/testtot
-print '3 Prong', NOP3/testtot
-print '4 Prong', NOP4/testtot
-print '5 Prong', NOP5/testtot
-print '6 Prong', NOP6/testtot
-print '7 Prong', NOP7/testtot
-print '8 Prong', NOP8/testtot
-print '9 Prong', NOP9/testtot
-'''
+print '********************************************************************************************************'
+print '*                                                                                                      *'
+print '********************************************************************************************************'
 
 #makePlots()
 elikkayalib.finish()
