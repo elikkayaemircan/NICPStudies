@@ -1,6 +1,7 @@
 import ROOT as r
 import rootUtils as ut
 import elikkayalib, argparse
+from histAll import *
 
 from physlib import *
 
@@ -19,7 +20,7 @@ work_dir = args.work_dir
 geo_file = args.geo_file
 input_file = args.input_file
 
-fSquark = open(work_dir+'/sQuark_ebar.out', 'w')
+#fSquark = open(work_dir+'/sQuark_ebar.out', 'w')
 
 t = elikkayalib.configure(input_file)
 
@@ -40,77 +41,6 @@ Lepton = [-11, -13, -15, 11, 13, 15]
 
 CharmedHadron = [-411, -421, -431, -4122]
 Chargeless = [-14, 22, 111, 130, 421, 2112]
-
-h = {}
-ut.bookHist(h, 'effPlot', 'Efficiency Plot', 60, 0, 300)
-ut.bookHist(h, 'charm_fraction', 'Charm Fractions', 4, 0, 4)
-ut.bookHist(h, 'charm_fractionS', 'Charm Fractions (Selected)', 4, 0, 4)
-ut.bookHist(h, 'nuE', 'Incoming Neutrino Energy Spectrum nu_mu_bar', 60, 0, 300)
-ut.bookHist(h, 'nuES', 'Incoming Neutrino Energy Spectrum nu_mu_bar; (Selected)', 60, 0, 300)
-ut.bookHist(h, 'BjorX', 'Bjorken X Distribution', 100, 0, 1)
-ut.bookHist(h, 'BjorXs', 'Bjorken X Distribution (Selected)', 100, 0, 1)
-ut.bookHist(h, 'InelY', 'Inelasticity Y Distribution', 100, 0, 1)
-ut.bookHist(h, 'InelYs', 'Inelasticity Y Distribution (Selected)', 100, 0, 1)
-ut.bookHist(h, 'tplane', 'Neutrino Interactions at Transverse Plane', 100, -50, 50, 100, -50, 50)
-ut.bookHist(h, 'tplaneS', 'Neutrino Interactions at Transverse Plane (Selected)', 100, -50, 50, 100, -50, 50)
-ut.bookHist(h, 'angDistXB',  'Angular Distribution Below 100GeV in X-axis',            240, -12, 12)
-ut.bookHist(h, 'angDistXBs', 'Angular Distribution Below 100GeV in X-axis (Selected)', 240, -12, 12)
-ut.bookHist(h, 'angDistXA',  'Angular Distribution Above 100GeV in X-axis',            240, -12, 12)
-ut.bookHist(h, 'angDistXAs', 'Angular Distribution Above 100GeV in X-axis (Selected)', 240, -12, 12)
-ut.bookHist(h, 'angDistYB',  'Angular Distribution Below 100GeV in Y-axis',            240, -12, 12)
-ut.bookHist(h, 'angDistYBs', 'Angular Distribution Below 100GeV in Y-axis (Selected)', 240, -12, 12)
-ut.bookHist(h, 'angDistYA',  'Angular Distribution Above 100GeV in Y-axis',            240, -12, 12)
-ut.bookHist(h, 'angDistYAs', 'Angular Distribution Above 100GeV in Y-axis (Selected)', 240, -12, 12)
-ut.bookHist(h, 'angDistXF',  'Angular Distribution in X-axis',            240, -12, 12)
-ut.bookHist(h, 'angDistXFs', 'Angular Distribution in X-axis (Selected)', 240, -12, 12)
-ut.bookHist(h, 'angDistYF',  'Angular Distribution in Y-axis',            240, -12, 12)
-ut.bookHist(h, 'angDistYFs', 'Angular Distribution in Y-axis (Selected)', 240, -12, 12)
-ut.bookHist(h, 'angScatB', 'Scatter Plot of X-Y Angular Distributions Below 100 GeV', 240, -12, 12, 240, -12, 12)
-ut.bookHist(h, 'angScatA', 'Scatter Plot of X-Y Angular Distributions Above 100 GeV', 240, -12, 12, 240, -12, 12)
-ut.bookHist(h, 'angSpc',  'Space Angle of Neutrinos',            150, 0, 15)
-ut.bookHist(h, 'angSpcs', 'Space Angle of Neutrinos (Selected)', 150, 0, 15)
-ut.bookHist(h, 'za', 'Interactions at z-axis', 375, -3075, -2700)
-ut.bookHist(h, 'zaS', 'Interactions at z-axis (Selected)', 375, -3075, -2700)
-ut.bookHist(h, 'dC1E', 'Charmed Hadron Energy Spectrum D-', 40, 0, 100)
-ut.bookHist(h, 'dC1ES', 'Charmed Hadron Energy Spectrum D- (Selected)', 40, 0, 100)
-ut.bookHist(h, 'dC2E', 'Charmed Hadron Energy Spectrum D0-bar', 40, 0, 100)
-ut.bookHist(h, 'dC2ES', 'Charmed Hadron Energy Spectrum D0-bar (Selected)', 40, 0, 100)
-ut.bookHist(h, 'dC3E', 'Charmed Hadron Energy Spectrum Ds-', 40, 0, 100)
-ut.bookHist(h, 'dC3ES', 'Charmed Hadron Energy Spectrum Ds- (Selected)', 40, 0, 100)
-ut.bookHist(h, 'dC4E', 'Charmed Hadron Energy Spectrum Lc-', 40, 0, 100)
-ut.bookHist(h, 'dC4ES', 'Charmed Hadron Energy Spectrum Lc- (Selected)', 40, 0, 100)
-ut.bookHist(h, 'dC1FL', 'Charmed Hadron Flight Length D-', 50, 0, 10)
-ut.bookHist(h, 'dC1FLS', 'Charmed Hadron Flight Length D- (Selected)', 50, 0, 10)
-ut.bookHist(h, 'dC2FL', 'Charmed Hadron Flight Length D0-bar', 50, 0, 10)
-ut.bookHist(h, 'dC2FLS', 'Charmed Hadron Flight Length D0-bar (Selected)', 50, 0, 10)
-ut.bookHist(h, 'dC3FL', 'Charmed Hadron Flight Length Ds-', 50, 0, 10)
-ut.bookHist(h, 'dC3FLS', 'Charmed Hadron Flight Length Ds- (Selected)', 50, 0, 10)
-ut.bookHist(h, 'dC4FL', 'Charmed Hadron Flight Length Lc-', 50, 0, 10)
-ut.bookHist(h, 'dC4FLS', 'Charmed Hadron Flight Length Lc- (Selected)', 50, 0, 10)
-ut.bookHist(h, 'dC1KA',  'Kink Angle at Charm Vertex D-',             50, 0, 1)
-ut.bookHist(h, 'dC1KAS', 'Kink Angle at Charm Vertex D- (Selected)',  50, 0, 1)
-ut.bookHist(h, 'dC2OA',  'Opening Angle at Charm Vertex D0-bar',             50, 0, 1)
-ut.bookHist(h, 'dC2OAS', 'Opening Angle at Charm Vertex D0-bar (Selected)',  50, 0, 1)
-ut.bookHist(h, 'dC3KA',  'Kink Angle at Charm Vertex Ds-',            50, 0, 1)
-ut.bookHist(h, 'dC3KAS', 'Kink Angle at Charm Vertex Ds- (Selected)', 50, 0, 1)
-ut.bookHist(h, 'dC4KA',  'Kink Angle at Charm Vertex Lc-',            50, 0, 1)
-ut.bookHist(h, 'dC4KAS', 'Kink Angle at Charm Vertex Lc- (Selected)', 50, 0, 1)
-ut.bookHist(h, 'dC1M', 'Charmed Hadron Multiplicity at Primary Vertex D-', 15, 0, 15)
-ut.bookHist(h, 'dC1MS', 'Charmed Hadron Multiplicity at Primary Vertex D- (Selected)', 15, 0, 15)
-ut.bookHist(h, 'dC2M', 'Charmed Hadron Multiplicity at Primary Vertex D0-bar', 15, 0, 15)
-ut.bookHist(h, 'dC2MS', 'Charmed Hadron Multiplicity at Primary Vertex D0-bar (Selected)', 15, 0, 15)
-ut.bookHist(h, 'dC3M', 'Charmed Hadron Multiplicity at Primary Vertex Ds-', 15, 0, 15)
-ut.bookHist(h, 'dC3MS', 'Charmed Hadron Multiplicity at Primary Vertex Ds- (Selected)', 15, 0, 15)
-ut.bookHist(h, 'dC4M', 'Charmed Hadron Multiplicity at Primary Vertex Lc-', 15, 0, 15)
-ut.bookHist(h, 'dC4MS', 'Charmed Hadron Multiplicity at Primary Vertex Lc- (Selected)', 15, 0, 15)
-ut.bookHist(h, 'dC1M2', 'Charmed Hadron Multiplicity at Secondary Vertex D-', 8, 0, 8)
-ut.bookHist(h, 'dC1M2S', 'Charmed Hadron Multiplicity at Secondary Vertex D- (Selected)', 8, 0, 8)
-ut.bookHist(h, 'dC2M2', 'Charmed Hadron Multiplicity at Secondary Vertex D0-bar', 8, 0, 8)
-ut.bookHist(h, 'dC2M2S', 'Charmed Hadron Multiplicity at Secondary Vertex D0-bar (Selected)', 8, 0, 8)
-ut.bookHist(h, 'dC3M2', 'Charmed Hadron Multiplicity at Secondary Vertex Ds-', 8, 0, 8)
-ut.bookHist(h, 'dC3M2S', 'Charmed Hadron Multiplicity at Secondary Vertex Ds- (Selected)', 8, 0, 8)
-ut.bookHist(h, 'dC4M2', 'Charmed Hadron Multiplicity at Secondary Vertex Lc-', 8, 0, 8)
-ut.bookHist(h, 'dC4M2S', 'Charmed Hadron Multiplicity at Secondary Vertex Lc- (Selected)', 8, 0, 8)
 
 C1P0g, C1P1g, C1P2g, C1P3g, C1P4g, C1P5g, C1P6g, C1P7g, C1P8g, C1P9g = [], [], [], [], [], [], [], [], [], []
 C2P0g, C2P1g, C2P2g, C2P3g, C2P4g, C2P5g, C2P6g, C2P7g, C2P8g, C2P9g = [], [], [], [], [], [], [], [], [], []
@@ -170,276 +100,15 @@ def DecaySearchSelection(fL, kA, iP, oA): #FlightLength, KinkAngle, ImpactParame
   if sum(dsCheck) != 4: return False
   return True
 
-def CharmFraction(CharmPDG, h, CCounter):
+def CharmFraction(CharmPDG, CCounter):
   if CharmPDG == -411:
-    h.Fill(0,1)
     CCounter[0] += 1.
   if CharmPDG == -421:
-    h.Fill(1,1)
     CCounter[1] += 1.
   if CharmPDG == -431:
-    h.Fill(2,1)
     CCounter[2] += 1.
   if CharmPDG == -4122:
-    h.Fill(3,1)
     CCounter[3] += 1.
-
-def makePlots():
-  #Charmed Hadron Fraction Histogram
-  ut.bookCanvas(h,key='FractionAnalysis',title='Produced Charmed Hadron Fractions',nx=1920,ny=1080,cx=1,cy=1)
-  cv = h['FractionAnalysis'].cd(1)
-  r.gStyle.SetOptStat(0)
-  h['charm_fraction'].Draw()
-  h['charm_fractionS'].SetFillStyle(3335)
-  h['charm_fractionS'].SetFillColor(2)
-  h['charm_fractionS'].Draw('same')
-  h['FractionAnalysis'].Print(work_dir+'/Histograms/cfraction.pdf')
-  #Charmed Hadron Energy Histograms
-  ut.bookCanvas(h,key='dEnergyAnalysis',title='Produced Charmed Hadron Energies',nx=1920,ny=1080,cx=2,cy=2)
-  cv = h['dEnergyAnalysis'].cd(1)
-  r.gStyle.SetOptStat(1111)
-  h['dC1E'].Draw()
-  h['dC1E'].SetXTitle('Energy (GeV)')
-  h['dC1ES'].SetFillStyle(3335)
-  h['dC1ES'].SetFillColor(2)
-  h['dC1ES'].Draw('same')
-  cv = h['dEnergyAnalysis'].cd(2)
-  h['dC2E'].Draw()
-  h['dC2E'].SetXTitle('Energy (GeV)')
-  h['dC2ES'].SetFillStyle(3335)
-  h['dC2ES'].SetFillColor(2)
-  h['dC2ES'].Draw('same')
-  cv = h['dEnergyAnalysis'].cd(3)
-  h['dC3E'].Draw()
-  h['dC3E'].SetXTitle('Energy (GeV)')
-  h['dC3ES'].SetFillStyle(3335)
-  h['dC3ES'].SetFillColor(2)
-  h['dC3ES'].Draw('same')
-  cv = h['dEnergyAnalysis'].cd(4)
-  h['dC4E'].Draw()
-  h['dC4E'].SetXTitle('Energy (GeV)')
-  h['dC4ES'].SetFillStyle(3335)
-  h['dC4ES'].SetFillColor(2)
-  h['dC4ES'].Draw('same')
-  h['dEnergyAnalysis'].Print(work_dir+'/Histograms/dcenergy.pdf')
-  #Flight Length Histograms
-  ut.bookCanvas(h,key='dFLAnalysis',title='Produced Charmed Hadron Flight Lengths',nx=1920,ny=1080,cx=2,cy=2)
-  cv = h['dFLAnalysis'].cd(1)
-  h['dC1FL'].Draw()
-  h['dC1FL'].SetXTitle('Decay Length (mm)')
-  h['dC1FLS'].SetFillStyle(3335)
-  h['dC1FLS'].SetFillColor(2)
-  h['dC1FLS'].Draw('same')
-  cv = h['dFLAnalysis'].cd(2)
-  h['dC2FL'].Draw()
-  h['dC2FL'].SetXTitle('Decay Length (mm)')
-  h['dC2FLS'].SetFillStyle(3335)
-  h['dC2FLS'].SetFillColor(2)
-  h['dC2FLS'].Draw('same')
-  cv = h['dFLAnalysis'].cd(3)
-  h['dC3FL'].Draw()
-  h['dC3FL'].SetXTitle('Decay Length (mm)')
-  h['dC3FLS'].SetFillStyle(3335)
-  h['dC3FLS'].SetFillColor(2)
-  h['dC3FLS'].Draw('same')
-  cv = h['dFLAnalysis'].cd(4)
-  h['dC4FL'].Draw()
-  h['dC4FL'].SetXTitle('Decay Length (mm)')
-  h['dC4FLS'].SetFillStyle(3335)
-  h['dC4FLS'].SetFillColor(2)
-  h['dC4FLS'].Draw('same')
-  h['dFLAnalysis'].Print(work_dir+'/Histograms/dcfl.pdf')
-  #Multiplicity at Neutrino Vertex Histograms
-  ut.bookCanvas(h,key='dMultAnalysis',title='Multiplicity at Primary Vertex',nx=1920,ny=1080,cx=2,cy=2)
-  cv = h['dMultAnalysis'].cd(1)
-  h['dC1M'].Draw()
-  h['dC1MS'].SetFillStyle(3335)
-  h['dC1MS'].SetFillColor(2)
-  h['dC1MS'].Draw('same')
-  cv = h['dMultAnalysis'].cd(2)
-  h['dC2M'].Draw()
-  h['dC2MS'].SetFillStyle(3335)
-  h['dC2MS'].SetFillColor(2)
-  h['dC2MS'].Draw('same')
-  cv = h['dMultAnalysis'].cd(3)
-  h['dC3M'].Draw()
-  h['dC3MS'].SetFillStyle(3335)
-  h['dC3MS'].SetFillColor(2)
-  h['dC3MS'].Draw('same')
-  cv = h['dMultAnalysis'].cd(4)
-  h['dC4M'].Draw()
-  h['dC4MS'].SetFillStyle(3335)
-  h['dC4MS'].SetFillColor(2)
-  h['dC4MS'].Draw('same')
-  h['dMultAnalysis'].Print(work_dir+'/Histograms/dcmult.pdf')
-  #Multiplicity at Charm Vertex Histograms
-  ut.bookCanvas(h,key='dMultAnalysis2',title='Multiplicity at Secondary Vertex',nx=1920,ny=1080,cx=2,cy=2)
-  cv = h['dMultAnalysis2'].cd(1)
-  h['dC1M2'].Draw()
-  h['dC1M2S'].SetFillStyle(3335)
-  h['dC1M2S'].SetFillColor(2)
-  h['dC1M2S'].Draw('same')
-  cv = h['dMultAnalysis2'].cd(2)
-  h['dC2M2'].Draw()
-  h['dC2M2S'].SetFillStyle(3335)
-  h['dC2M2S'].SetFillColor(2)
-  h['dC2M2S'].Draw('same')
-  cv = h['dMultAnalysis2'].cd(3)
-  h['dC3M2'].Draw()
-  h['dC3M2S'].SetFillStyle(3335)
-  h['dC3M2S'].SetFillColor(2)
-  h['dC3M2S'].Draw('same')
-  cv = h['dMultAnalysis2'].cd(4)
-  h['dC4M2'].Draw()
-  h['dC4M2S'].SetFillStyle(3335)
-  h['dC4M2S'].SetFillColor(2)
-  h['dC4M2S'].Draw('same')
-  h['dMultAnalysis2'].Print(work_dir+'/Histograms/dcmult2.pdf')
-  #Kink Angle Histograms
-  ut.bookCanvas(h,key='kAngle',title='Kink Angle',nx=1920,ny=540,cx=3,cy=1)
-  cv = h['kAngle'].cd(1)
-  h['dC1KA'].Draw()
-  h['dC1KA'].SetXTitle('Kink Angle (rad)')
-  h['dC1KAS'].SetFillStyle(3335)
-  h['dC1KAS'].SetFillColor(2)
-  h['dC1KAS'].Draw('same')
-  cv = h['kAngle'].cd(2)
-  h['dC3KA'].Draw()
-  h['dC3KA'].SetXTitle('Kink Angle (rad)')
-  h['dC3KAS'].SetFillStyle(3335)
-  h['dC3KAS'].SetFillColor(2)
-  h['dC3KAS'].Draw('same')
-  cv = h['kAngle'].cd(3)
-  h['dC4KA'].Draw()
-  h['dC4KA'].SetXTitle('Kink Angle (rad)')
-  h['dC4KAS'].SetFillStyle(3335)
-  h['dC4KAS'].SetFillColor(2)
-  h['dC4KAS'].Draw('same')
-  h['kAngle'].Print(work_dir+'/Histograms/kAngle.pdf')
-  #Opening Angle Histograms
-  ut.bookCanvas(h,key='oAngle',title='Opening Angle',nx=1920,ny=1080,cx=1,cy=1)
-  cv = h['oAngle'].cd(1)
-  h['dC2OA'].Draw()
-  h['dC2OA'].SetXTitle('Opening Angle (rad)')
-  h['dC2OAS'].SetFillStyle(3335)
-  h['dC2OAS'].SetFillColor(2)
-  h['dC2OAS'].Draw('same')
-  h['oAngle'].Print(work_dir+'/Histograms/oAngle.pdf')
-  #Neutrino Beam Energy Histogram
-  ut.bookCanvas(h,key='nuEnergy',title='Incoming Neutrino Beam Energy',nx=1920,ny=1080,cx=1,cy=1)
-  cv = h['nuEnergy'].cd(1)
-  h['nuE'].Draw()
-  h['nuE'].SetXTitle('Energy (GeV)')
-  h['nuES'].SetFillStyle(3335)
-  h['nuES'].SetFillColor(2)
-  h['nuES'].Draw('same')
-  h['nuEnergy'].Print(work_dir+'/Histograms/nuenergy.pdf')
-  #Neutrino Interactions at Transverse Plane Histogram
-  ut.bookCanvas(h,key='nutp',title='Transverse Plane Interactions',nx=1920,ny=720,cx=2,cy=1)
-  cv = h['nutp'].cd(1)
-  h['tplane'].Draw('COLZ')
-  cv = h['nutp'].cd(2)
-  h['tplaneS'].Draw('COLZ')
-  h['nutp'].Print(work_dir+'/Histograms/nutplane.pdf')
-  #Efficiency plot with nu energy
-  ut.bookCanvas(h,key='nuEff',title='Efficiency Plot',nx=1920,ny=1080,cx=1,cy=1)
-  cv = h['nuEff'].cd(1)
-  r.gStyle.SetOptStat(0)
-  h['nuE'].Draw()
-  h['nuES'].Draw()
-  h['nuES'].Sumw2()
-  h['effPlot'].Divide(h['nuES'],h['nuE'],1.,1.,'B')
-  h['effPlot'].Draw('E0')
-  h['nuEff'].Print(work_dir+'/Histograms/nuEff.pdf')
-  #Z-axis interactions
-  ut.bookCanvas(h,key='zaxis',title='Z Axis Interactions',nx=1920,ny=1080,cx=1,cy=1)
-  cv = h['zaxis'].cd(1)
-  h['za'].Draw()
-  h['zaS'].SetFillStyle(3335)
-  h['zaS'].SetFillColor(2)
-  h['zaS'].Draw('same')
-  h['zaxis'].Print(work_dir+'/Histograms/nuZ.pdf')
-  #Bjorken X distribution
-  ut.bookCanvas(h,key='bjor',title='Bjorken X Distribution',nx=1920,ny=1080,cx=1,cy=1)
-  cv = h['bjor'].cd(1)
-  h['BjorX'].Draw()
-  h['BjorXs'].SetFillStyle(3335)
-  h['BjorXs'].SetFillColor(2)
-  h['BjorXs'].Draw('same')
-  h['bjor'].Print(work_dir+'/Histograms/bjorkenX.pdf')
-  #Inelasticity Y distribution
-  ut.bookCanvas(h,key='inel',title='Inelasticity Y Distribution',nx=1920,ny=1080,cx=1,cy=1)
-  cv = h['inel'].cd(1)
-  h['InelY'].Draw()
-  h['InelYs'].SetFillStyle(3335)
-  h['InelYs'].SetFillColor(2)
-  h['InelYs'].Draw('same')
-  h['inel'].Print(work_dir+'/Histograms/inelasticityY.pdf')
-  #Angular Distribution of Neutrinos
-  ut.bookCanvas(h,key='adist',title='Angular Distribution of Neutrinos in X and Y Axis',nx=1920,ny=720,cx=2,cy=2)
-  cv = h['adist'].cd(1)
-  r.gStyle.SetOptStat(1111)
-  h['angDistXB'].Draw('HIST')
-  h['angDistXB'].SetXTitle('mrad')
-  h['angDistXBs'].SetFillStyle(3335)
-  h['angDistXBs'].SetFillColor(2)
-  h['angDistXBs'].Draw('same')
-  cv = h['adist'].cd(2)
-  h['angDistYB'].Draw('HIST')
-  h['angDistYB'].SetXTitle('mrad')
-  h['angDistYBs'].SetFillStyle(3335)
-  h['angDistYBs'].SetFillColor(2)
-  h['angDistYBs'].Draw('same')
-  cv = h['adist'].cd(3)
-  h['angDistXA'].Draw('HIST')
-  h['angDistXA'].SetXTitle('mrad')
-  h['angDistXAs'].SetFillStyle(3335)
-  h['angDistXAs'].SetFillColor(2)
-  h['angDistXAs'].Draw('same')
-  cv = h['adist'].cd(4)
-  h['angDistYA'].Draw('HIST')
-  h['angDistYA'].SetXTitle('mrad')
-  h['angDistYAs'].SetFillStyle(3335)
-  h['angDistYAs'].SetFillColor(2)
-  h['angDistYAs'].Draw('same')
-  h['adist'].Print(work_dir+'/Histograms/angDist.pdf')
-  #Angular Distribution of Neutrinos in Total Spectrum
-  ut.bookCanvas(h,key='adistFS',title='Angular Distribution of Neutrinos in X and Y Axis',nx=1920,ny=720,cx=2,cy=1)
-  cv = h['adistFS'].cd(1)
-  h['angDistXF'].Draw('HIST')
-  h['angDistXF'].SetXTitle('mrad')
-  h['angDistXFs'].SetFillStyle(3335)
-  h['angDistXFs'].SetFillColor(2)
-  h['angDistXFs'].Draw('same')
-  cv = h['adistFS'].cd(2)
-  h['angDistYF'].Draw('HIST')
-  h['angDistYF'].SetXTitle('mrad')
-  h['angDistYFs'].SetFillStyle(3335)
-  h['angDistYFs'].SetFillColor(2)
-  h['angDistYFs'].Draw('same')
-  h['adistFS'].Print(work_dir+'/Histograms/angDistFS.pdf')
-  #Scatter Plot of Angular Distribution of Neutrinos 
-  ut.bookCanvas(h,key='aScat',title='Scatter Plot of Angular Distribution of Neutrinos',nx=1920,ny=720,cx=2,cy=1)
-  cv = h['aScat'].cd(1)
-  h['angScatA'].Draw('SCAT')
-  h['angScatA'].SetXTitle('Angle in X (mrad)')
-  h['angScatA'].SetYTitle('Angle in Y (mrad)')
-  cv = h['aScat'].cd(2)
-  h['angScatB'].Draw('SCAT')
-  h['angScatB'].SetXTitle('Angle in X (mrad)')
-  h['angScatB'].SetYTitle('Angle in Y (mrad)')
-  h['aScat'].SetLogx()
-  h['aScat'].SetLogy()
-  h['aScat'].Print(work_dir+'/Histograms/angScat.pdf')
-  #Angular Distribution of Neutrinos in Total Spectrum
-  ut.bookCanvas(h,key='aSpc',title='Space Angle of Neutrinos',nx=1920,ny=720,cx=1,cy=1)
-  cv = h['aSpc'].cd(1)
-  h['angSpc'].Draw('HIST')
-  h['angSpc'].SetXTitle('mrad')
-  h['angSpcs'].SetFillStyle(3335)
-  h['angSpcs'].SetFillColor(2)
-  h['angSpcs'].Draw('same')
-  h['aSpc'].Print(work_dir+'/Histograms/angSpc.pdf')
 
 def Eff(Arr):
   try:
@@ -510,31 +179,34 @@ def ChannelDecision(CPdg, NOP):
   if CPdg == -4122 and NOP == 9: ch = 49
   return ch
 
+mom4_nucl = r.TLorentzVector(0., 0., 0., (0.9383+0.9396)/2)        #Global Variable
+
+lYES = 0.
+lNO = 0.
+
 for event in xrange(nEnt):
 
   t.GetEntry(event)
 
   if (t.IntInGeo.at(0)):
 
-    CDauPdg = []
-    CDauPos_i, CDauPos_j, CDauPos_k = [], [], []
-    CDauMom_i, CDauMom_j, CDauMom_k, CDauMom_l = [], [], [], []
-    Mom_i, Mom_j, Mom_k, Mom_l = [], [], [], []
     PVPdg = []  #PrimaryVertexPdg
-    GS, LS, DSS = [], [], []
-    mom4_nu, mom4_nucl, mom4_lept = r.TLorentzVector(0., 0., 0., 0.), r.TLorentzVector(0., 0., 0., 0.), r.TLorentzVector(0., 0., 0., 0.)
-    nuEnergy = 0.
-    delProng = False
+    Mom_i, Mom_j, Mom_k, Mom_l = [], [], [], []         #Primary Vertex Momentum
+    CDauPdg, CDauPos_i, CDauPos_j, CDauPos_k = [], [], [], []       #Charm PDG and Charm Vertex Position
+    CDauMom_i, CDauMom_j, CDauMom_k, CDauMom_l = [], [], [], []         #Charm Daughter Momentum
+
+    GS, LS, DSS = [], [], []        #Selection Counter Arrays
+    mom4_nu, mom4_lept = r.TLorentzVector(0., 0., 0., 0.), r.TLorentzVector(0., 0., 0., 0.)        #X-Y Calculators
+    nuEnergy, lEnergy = 0., 0.      #Primary Vertex Neutrino and Lepton Energies
+    delProng = False        #Prong Selector Parameter Default with False
 
     for vtx in xrange(t.VertexInfo.size()):
 
       if t.VertexInfo.at(vtx) == 0:
         nuEnergy = t.Energy.at(vtx)
         mom4_nu += r.TLorentzVector(t.Px.at(vtx), t.Py.at(vtx), t.Pz.at(vtx), nuEnergy)
-        mom4_nucl += r.TLorentzVector(0., 0., 0., (0.9383+0.9396)/2)
         angNuX = Slope(t.Px.at(vtx), t.Pz.at(vtx))*1000       #in mrad
         angNuY = Slope(t.Py.at(vtx), t.Pz.at(vtx))*1000       #in mrad
-        angSpc = (angNuX**2 + angNuY**2)**0.5
 
       if t.VertexInfo.at(vtx) == 1:
         Pos = []
@@ -545,7 +217,7 @@ for event in xrange(nEnt):
         Mom_j.append(t.Py.at(vtx))
         Mom_k.append(t.Pz.at(vtx))
         Mom_l.append(t.P.at(vtx))
-        PVPdg.append(t.PdgCode.at(vtx))
+        PVPdg.append(int(t.PdgCode.at(vtx)))
         if PVPdg[-1] in CharmedHadron:
           CPos = Pos
           CMom = []
@@ -556,6 +228,7 @@ for event in xrange(nEnt):
           CPdg = PVPdg[-1]
           CEnergy = t.Energy.at(vtx)
         if PVPdg[-1] in Lepton:
+          lEnergy = t.Energy.at(vtx)
           mom4_lept += r.TLorentzVector(t.Px.at(vtx), t.Py.at(vtx), t.Pz.at(vtx), t.Energy.at(vtx))
 
       if t.VertexInfo.at(vtx) == 22:
@@ -568,15 +241,21 @@ for event in xrange(nEnt):
         CDauMom_l.append(t.P.at(vtx))
         CDauPdg.append(t.PdgCode.at(vtx))
 
-    CDauPos = [CDauPos_i[0],CDauPos_j[0],CDauPos_k[0]]
+    CDauPos = [CDauPos_i[0],CDauPos_j[0],CDauPos_k[0]]      #Charm Decay Position
+
     NOP = ProngCount(CDauPdg)
     ch = ChannelDecision(CPdg, NOP)
-    MultPri = Multiplicity(PVPdg, Chargeless)
-    MultSec = Multiplicity(CDauPdg, Chargeless)
-    CSX = Slope(CMom[0], CMom[2])
+
+    MultPri = Multiplicity(PVPdg, Chargeless)       #Multiplicity at Primary Vertex
+    MultSec = Multiplicity(CDauPdg, Chargeless)         #Multiplicity at Charm Vertex
+
+    CSX = Slope(CMom[0], CMom[2])           #Charm Slope in X-axis
     CSY = Slope(CMom[1], CMom[2])
+    angSpc = (angNuX**2 + angNuY**2)**0.5       #Space Angle of Neutrino
+
     fL = FlightLength(CDauPos, CPos)*10.0    #in mm
     iP = ImpactParameterV2(CPos, CDauPos, CSX, CSY)*1e4     #in micro-m
+
     BjorX = Bjorken(mom4_nu, mom4_lept, mom4_nucl)
     InelY = Inelasticity(mom4_nu, mom4_lept, mom4_nucl)
 
@@ -624,102 +303,161 @@ for event in xrange(nEnt):
         DSS.append(True)
       else: DSS.append(False)
 
-    if CPdg in [-411, -431, -4122] and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    #if CPdg in [-411, -431, -4122] and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+
+    if (CPdg == -411) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    #if (CPdg == -411):    # 5 and 7 Prongs have been deleted
+      delProng = True
+    if (CPdg == -431) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    #if (CPdg == -431):    # 5 and 7 Prongs have been deleted
+      delProng = True
+    if (CPdg == -4122) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    #if (CPdg == -4122):    # 5 and 7 Prongs have been deleted
       delProng = True
     if (CPdg == -421) and NOP not in [0, 2, 4]:      # 6 Prong has been deleted
+    #if (CPdg == -421):      # 6 Prong has been deleted
       delProng = True
+    if lEnergy == 0:
+      delProng == True
 
     if not delProng:
 
-      CharmFraction(CPdg, h['charm_fraction'], CCounter)
-      h['tplane'].Fill(Pos[0], Pos[1])
       h['nuE'].Fill(nuEnergy)
+      h['eCorr'].Fill(nuEnergy,lEnergy)
+      h['fCorr'].Fill(nuEnergy,fL)
+      h['iCorr'].Fill(nuEnergy,iP)
+      if NOP == 0:
+        h['okCorr'].Fill(nuEnergy,oA)
+      if NOP == 1:
+        h['okCorr'].Fill(nuEnergy,kA)
+      h['nuAngDistXF'].Fill(angNuX)
+      h['nuAngDistYF'].Fill(angNuY)
+      h['nuAngSpcF'].Fill(angSpc)
+      h['nuAng2DF'].Fill(angNuX,angNuY)
+
+      if nuEnergy <= 100.:
+          h['nuAngDistXB'].Fill(angNuX)
+          h['nuAngDistYB'].Fill(angNuY)
+          h['nuAng2DB'].Fill(angNuX,angNuY)
+      else:
+          h['nuAngDistXA'].Fill(angNuX)
+          h['nuAngDistYA'].Fill(angNuY)
+          h['nuAng2DA'].Fill(angNuX,angNuY)
+
+      CharmFraction(CPdg, CCounter)
+      h['tplane'].Fill(Pos[0], Pos[1])
       h['za'].Fill(Pos[2])
       h['BjorX'].Fill(BjorX)
       h['InelY'].Fill(InelY)
-      h['angDistXF'].Fill(angNuX)
-      h['angDistYF'].Fill(angNuY)
-      h['angSpc'].Fill(angSpc)
-      if nuEnergy <= 100.:
-          h['angDistXB'].Fill(angNuX)
-          h['angDistYB'].Fill(angNuY)
-      else:         
-          h['angDistXA'].Fill(angNuX)
-          h['angDistYA'].Fill(angNuY)
+
       inGeo += 1.
 
       if CPdg == -411:
         h['dC1E'].Fill(CEnergy)
         h['dC1FL'].Fill(fL)
+        h['dC1IP'].Fill(iP)
         h['dC1KA'].Fill(kA)
         h['dC1M'].Fill(MultPri)
         h['dC1M2'].Fill(MultSec)
       elif CPdg== -421:
         h['dC2E'].Fill(CEnergy)
         h['dC2FL'].Fill(fL)
+        h['dC2IP'].Fill(iP)
         h['dC2OA'].Fill(oA)
         h['dC2M'].Fill(MultPri)
         h['dC2M2'].Fill(MultSec)
       elif CPdg == -431:
         h['dC3E'].Fill(CEnergy)
         h['dC3FL'].Fill(fL)
+        h['dC3IP'].Fill(iP)
         h['dC3KA'].Fill(kA)
         h['dC3M'].Fill(MultPri)
         h['dC3M2'].Fill(MultSec)
       elif CPdg == -4122:
         h['dC4E'].Fill(CEnergy)
         h['dC4FL'].Fill(fL)
+        h['dC4IP'].Fill(iP)
         h['dC4KA'].Fill(kA)
         h['dC4M'].Fill(MultPri)
         h['dC4M2'].Fill(MultSec)
 
       if False not in GS:
+        if ch != 20:
+          h['g-nuEs'].Fill(nuEnergy)
+          h['g-eCorrs'].Fill(nuEnergy,lEnergy)
         if True in LS:
+          if ch!= 20:
+            h['l-nuEs'].Fill(nuEnergy)
+            h['l-eCorrs'].Fill(nuEnergy,lEnergy)
+            if fL < 4.:
+                h['d-nuEsFL'].Fill(nuEnergy)
+            if iP > 10.:
+                h['d-nuEsIP'].Fill(nuEnergy)
+            if (kA*1e3 > 10. and oA*1e3 > 20.):
+                h['d-nuEsOKA'].Fill(nuEnergy)
           if True in DSS:
             if CPdg == -411:
+              h['d-nuEs1'].Fill(nuEnergy)
               h['dC1ES'].Fill(CEnergy)
               h['dC1FLS'].Fill(fL)
+              h['dC1IPS'].Fill(iP)
               h['dC1KAS'].Fill(kA)
               h['dC1MS'].Fill(MultPri)
               h['dC1M2S'].Fill(MultSec)
             elif CPdg==-421 and ch!=20:
+              h['d-nuEs2'].Fill(nuEnergy)
               h['dC2ES'].Fill(CEnergy)
               h['dC2FLS'].Fill(fL)
+              h['dC2IPS'].Fill(iP)
               h['dC2OAS'].Fill(oA)
               h['dC2MS'].Fill(MultPri)
               h['dC2M2S'].Fill(MultSec)
             elif CPdg == -431:
+              h['d-nuEs3'].Fill(nuEnergy)
               h['dC3ES'].Fill(CEnergy)
               h['dC3FLS'].Fill(fL)
+              h['dC3IPS'].Fill(iP)
               h['dC3KAS'].Fill(kA)
               h['dC3MS'].Fill(MultPri)
               h['dC3M2S'].Fill(MultSec)
             elif CPdg == -4122:
+              h['d-nuEs4'].Fill(nuEnergy)
               h['dC4ES'].Fill(CEnergy)
               h['dC4FLS'].Fill(fL)
+              h['dC4IPS'].Fill(iP)
               h['dC4KAS'].Fill(kA)
               h['dC4MS'].Fill(MultPri)
               h['dC4M2S'].Fill(MultSec)
 
             if ch!=20:
-              CharmFraction(CPdg, h['charm_fractionS'], CCounterS)
+              h['d-nuEs'].Fill(nuEnergy)
+              h['d-eCorrs'].Fill(nuEnergy,lEnergy)
+              h['d-fCorrs'].Fill(nuEnergy,fL)
+              h['d-iCorrs'].Fill(nuEnergy,iP)
+              if NOP == 0:
+                h['d-okCorrs'].Fill(nuEnergy,oA)
+              if NOP == 1:
+                h['d-okCorrs'].Fill(nuEnergy,kA)
+              h['d-nuAngDistXFs'].Fill(angNuX)
+              h['d-nuAngDistYFs'].Fill(angNuY)
+              h['d-nuAngSpcFs'].Fill(angSpc)
+              h['d-nuAng2DFs'].Fill(angNuX,angNuY)
+
+              if nuEnergy <= 100.:
+                  h['d-nuAngDistXBs'].Fill(angNuX)
+                  h['d-nuAngDistYBs'].Fill(angNuY)
+                  h['d-nuAng2DBs'].Fill(angNuX,angNuY)
+              else:         
+                  h['d-nuAngDistXAs'].Fill(angNuX)
+                  h['d-nuAngDistYAs'].Fill(angNuY)
+                  h['d-nuAng2DAs'].Fill(angNuX,angNuY)
+
+              CharmFraction(CPdg, CCounterS)
               h['tplaneS'].Fill(Pos[0], Pos[1])
-              h['nuES'].Fill(nuEnergy)
               h['zaS'].Fill(Pos[2])
               h['BjorXs'].Fill(BjorX)
               h['InelYs'].Fill(InelY)
-              fSquark.write("%s,%s,%s,%s\n" %(event,nuEnergy, BjorX, InelY))
-              h['angDistXFs'].Fill(angNuX)
-              h['angDistYFs'].Fill(angNuY)
-              h['angSpcs'].Fill(angSpc)
-              if nuEnergy <= 100.:
-                  h['angDistXBs'].Fill(angNuX)
-                  h['angDistYBs'].Fill(angNuY)
-                  h['angScatB'].Fill(angNuX,angNuY)
-              else:         
-                  h['angDistXAs'].Fill(angNuX)
-                  h['angDistYAs'].Fill(angNuY)
-                  h['angScatA'].Fill(angNuX,angNuY)
+              #fSquark.write("%s,%s,%s,%s\n" %(event,nuEnergy, BjorX, InelY))
 
       if ch == 10:
         if False not in GS:
@@ -1284,10 +1022,6 @@ for event in xrange(nEnt):
     else:
       continue
 
-h['charm_fraction'].GetXaxis().SetBinLabel(1, "D^{-}")
-h['charm_fraction'].GetXaxis().SetBinLabel(2, "#bar{D}^{0}")
-h['charm_fraction'].GetXaxis().SetBinLabel(3, "D_{s}^{-}")
-h['charm_fraction'].GetXaxis().SetBinLabel(4, "#Lambda_{c}^{-}")
 
 print '********************************************************************************************************'
 print '*                                                                                                      *'
@@ -1467,18 +1201,34 @@ print '***************************************************************** Decay S
 
 print '********************************************************************************************************'
 
-C1Fr = CCounter[0]/sum(CCounter)
-C2Fr = CCounter[1]/sum(CCounter)
-C3Fr = CCounter[2]/sum(CCounter)
-C4Fr = CCounter[3]/sum(CCounter)
+CharmSum = sum(CCounter)
+C1FrProd = CCounter[0]/CharmSum
+C2FrProd = CCounter[1]/CharmSum
+C3FrProd = CCounter[2]/CharmSum
+#C4FrProd = CCounter[3]/CharmSum
+
+h['cFracProd'].Fill(0,C1FrProd)
+h['cFracProd'].Fill(1,C2FrProd)
+h['cFracProd'].Fill(2,C3FrProd)
+#h['cFracProd'].Fill(3,C4FrProd)
+
+C1FrSelc = CCounterS[0]/CCounter[0]
+C2FrSelc = CCounterS[1]/CCounter[1]
+C3FrSelc = CCounterS[2]/CCounter[2]
+#C4FrSelc = CCounterS[3]/CCounter[3]
+
+h['cFracSelc'].Fill(0,C1FrSelc)
+h['cFracSelc'].Fill(1,C2FrSelc)
+h['cFracSelc'].Fill(2,C3FrSelc)
+#h['cFracSelc'].Fill(3,C4FrSelc)
 
 print '    | Production |                            Selection '
 print '    |  Fraction  |  Produced     Selected       Ratio   '
 print '    |  --------  |  --------     --------      -------  '
-print 'D-  |   %.4f   |   %6.0f       %6.0f        %.4f' %(C1Fr, CCounter[0], CCounterS[0], CCounterS[0]/CCounter[0])
-print 'D0-b|   %.4f   |   %6.0f       %6.0f        %.4f' %(C2Fr, CCounter[1], CCounterS[1], CCounterS[1]/CCounter[1])
-print 'Ds- |   %.4f   |   %6.0f       %6.0f        %.4f' %(C3Fr, CCounter[2], CCounterS[2], CCounterS[2]/CCounter[2])
-#print 'Lc- |   %.4f   |   %6.0f       %6.0f        %.4f' %(C4Fr, CCounter[3], CCounterS[3], CCounterS[3]/CCounter[3])
+print 'D-  |   %.4f   |   %6.0f       %6.0f        %.4f' %(C1FrProd, CCounter[0], CCounterS[0], C1FrSelc)
+print 'D0-b|   %.4f   |   %6.0f       %6.0f        %.4f' %(C2FrProd, CCounter[1], CCounterS[1], C2FrSelc)
+print 'Ds- |   %.4f   |   %6.0f       %6.0f        %.4f' %(C3FrProd, CCounter[2], CCounterS[2], C3FrSelc)
+#print 'Lc- |   %.4f   |   %6.0f       %6.0f        %.4f' %(C4FrProd, CCounter[3], CCounterS[3], C4FrSelc)
 print '******************************************************************** Associated Charmed Hadron Fractions'
 
 print '********************************************************************************************************'
@@ -1489,8 +1239,8 @@ print '*************************************************************************
 print '*                                                                                                      *'
 print '********************************************************************************************************'
 
-fSquark.close()
-makePlots()
+#fSquark.close()
+makePlots(work_dir)
 
 elikkayalib.finish()
 

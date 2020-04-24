@@ -85,6 +85,8 @@ for d in xrange(n_files):
 
     for event in xrange(nEnt):
 
+      if event%1000 == 0: print event
+
       t.GetEntry(event)
       TrackNo= 0
 

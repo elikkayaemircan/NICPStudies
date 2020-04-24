@@ -1,6 +1,7 @@
 # NICPStudies
-Neutrino Induced Charm Production Studies for SHiP Experiment @ CERN
 
-First commit to README.md and it will be updated in future!
+## Neutrino Induced Charm Production Studies for SHiP Experiment @ CERN
 
-This repository includes some part of my analysis files.
+This repository includes some part of my analysis files. I will try to keep all the files up-to-date and make it public. Until that time, I just use Github to track my changes and learn Github.
+
+At first look, the code can looks like a trash, but it works anyway! I'll also try to rewrite it in a more elegant form..
