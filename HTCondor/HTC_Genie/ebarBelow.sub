@@ -1,0 +1,18 @@
+executable = /afs/cern.ch/user/e/eelikkay/NICPStudies/HTC_Genie/genieBelow_e_bar.sh
+arguments = $(ClusterId) $(ProcId)
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+output = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_Genie/stdout/nu_e_bar-below-$(ClusterId)_$(ProcId).out
+error  = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_Genie/stderr/nu_e_bar-below-$(ClusterId)_$(ProcId).err
+log    = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_Genie/htclog/nu_e_bar-below-$(ClusterId)_$(ProcId).log
+
+requirements= (CERNEnvironment =!= "qa")
++JobFlavour = "nextweek"
+
+request_cpus = 1
+request_disk = 3MB
+request_memory = 80MB
+
+queue 130

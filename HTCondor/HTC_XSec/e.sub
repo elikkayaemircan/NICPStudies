@@ -1,0 +1,18 @@
+executable = /afs/cern.ch/user/e/eelikkay/NICPStudies/HTC_XSec/XSec_e.sh
+arguments = $(ClusterId) $(ProcId)
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+output = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_XSec/stdout/nu_e-$(ClusterId)_$(ProcId).out
+error  = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_XSec/stderr/nu_e-$(ClusterId)_$(ProcId).err
+log    = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_XSec/htclog/nu_e-$(ClusterId)_$(ProcId).log
+
+requirements= (CERNEnvironment =!= "qa")
++JobFlavour = "nextweek"
+
+request_cpus = 1
+request_disk = 40MB
+request_memory = 90MB
+
+queue 130

@@ -1,0 +1,18 @@
+executable = /afs/cern.ch/user/e/eelikkay/NICPStudies/HTC_Geant/geantAbove_mu_bar.sh
+arguments = $(ClusterId) $(ProcId)
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+output = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_Geant/stdout/nu_mu_bar-above-$(ClusterId)_$(ProcId).out
+error  = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_Geant/stderr/nu_mu_bar-above-$(ClusterId)_$(ProcId).err
+log    = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs-HTC_Geant/htclog/nu_mu_bar-above-$(ClusterId)_$(ProcId).log
+
+requirements= (CERNEnvironment =!= "qa")
++JobFlavour = "nextweek"
+
+request_cpus = 1
+request_disk = 200MB
+request_memory = 2560MB
+
+queue 130
