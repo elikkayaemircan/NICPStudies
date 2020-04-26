@@ -1,9 +1,11 @@
 import ROOT as r
 import rootUtils as ut
-import elikkayalib, argparse
-from histAll import *
+import elikkayalib, argparse, time
 
+from histAll import *
 from physlib import *
+
+start_time = time.time()
 
 def init():
   ap = argparse.ArgumentParser(
@@ -196,11 +198,9 @@ for event in xrange(nEnt):
     #CDauMom_i, CDauMom_j, CDauMom_k, CDauMom_l = [], [], [], []         #Charm Daughter Momentum
 
     GS, LS, DSS = [], [], []        #Selection Counter Arrays
-    mom4_nu, mom4_lept = r.TLorentzVector(0., 0., 0., 0.), r.TLorentzVector(0., 0., 0., 0.)        #X-Y Calculators
-    nuEnergy, lEnergy = 0., 0.      #Primary Vertex Neutrino and Lepton Energies
     delProng = False        #Prong Selector Parameter Default with False
 
-    #Neutrino = {}      # Define Neutrino Dictionary
+    Neutrino = {}      # Define Neutrino Dictionary
     NeutrinoDaughter = { 'Px' : (), 'Py' : (), 'Pz' : (), 'P' : (),        # Define Neutrino Daughter Dictionary which Contains Tuples
                       'PosX' : (), 'PosY' : (), 'PosZ' : (), 'Pos' : (),
                       'PDG' : () }
@@ -208,14 +208,17 @@ for event in xrange(nEnt):
     CharmDaughter = { 'Px' : (), 'Py' : (), 'Pz' : (), 'P' : (),        # Define Charm Daughter Dictionary which Contains Tuples
                       'PosX' : (), 'PosY' : (), 'PosZ' : (), 'Pos' : (),
                       'PDG' : () }
+    Lepton = {}       # Define Lepton Dictionary
 
     for vtx in xrange(t.VertexInfo.size()):
 
       if t.VertexInfo.at(vtx) == 0:
-        nuEnergy = t.Energy.at(vtx)
-        mom4_nu += r.TLorentzVector(t.Px.at(vtx), t.Py.at(vtx), t.Pz.at(vtx), nuEnergy)
-        angNuX = Slope(t.Px.at(vtx), t.Pz.at(vtx))*1000       #in mrad
-        angNuY = Slope(t.Py.at(vtx), t.Pz.at(vtx))*1000       #in mrad
+        Neutrino = { 'E' : t.Energy.at(vtx),
+                     'Px' : t.Px.at(vtx),
+                     'Py' : t.Py.at(vtx),
+                     'Pz' : t.Pz.at(vtx),
+                     'P' : t.P.at(vtx),
+                     'Pos' : () }
 
       if t.VertexInfo.at(vtx) == 1:
         NeutrinoDaughter['Px'] += t.Px.at(vtx),
@@ -226,56 +229,36 @@ for event in xrange(nEnt):
         NeutrinoDaughter['PosY'] += t.StartY.at(vtx),
         NeutrinoDaughter['PosZ'] += t.StartZ.at(vtx),
         NeutrinoDaughter['PDG'] += t.PdgCode.at(vtx),
-        #Pos = []
-        #Pos.append(t.StartX.at(vtx))
-        #Pos.append(t.StartY.at(vtx))
-        #Pos.append(t.StartZ.at(vtx))
-        #Mom_i.append(t.Px.at(vtx))
-        #Mom_j.append(t.Py.at(vtx))
-        #Mom_k.append(t.Pz.at(vtx))
-        #Mom_l.append(t.P.at(vtx))
-        #PVPdg.append(int(t.PdgCode.at(vtx)))
         if NeutrinoDaughter['PDG'][-1] in CharmedHadron:
           Charm = { 'E' : t.Energy.at(vtx),
                     'Px' : t.Px.at(vtx),
                     'Py' : t.Py.at(vtx),
                     'Pz' : t.Pz.at(vtx),
                     'P' : t.P.at(vtx),
-                    'Pos' : (t.StartX.at(vtx),t.StartY.at(vtx),t.StartZ.at(vtx)),
+                    'Pos' : (),
                     'PDG' : NeutrinoDaughter['PDG'][-1] }
-          print Charm
-          #CPos = Pos
-          #CMom = []
-          ## CMom.append(t.Px.at(vtx))
-          ## CMom.append(t.Py.at(vtx))
-          ## CMom.append(t.Pz.at(vtx))
-          ## CMom.append(t.P.at(vtx))
-          CPdg = NeutrinoDaughter['PDG'][-1]
-          ## CEnergy = t.Energy.at(vtx)
         if NeutrinoDaughter['PDG'][-1] in Lepton:
-          lEnergy = t.Energy.at(vtx)
-          mom4_lept += r.TLorentzVector(t.Px.at(vtx), t.Py.at(vtx), t.Pz.at(vtx), t.Energy.at(vtx))
+          Lepton = { 'E' : t.Energy.at(vtx),
+                     'Px' : t.Px.at(vtx),
+                     'Py' : t.Py.at(vtx),
+                     'Pz' : t.Pz.at(vtx) }
 
       if t.VertexInfo.at(vtx) == 22:
         CharmDaughter['Px'] += t.Px.at(vtx),
         CharmDaughter['Py'] += t.Py.at(vtx),
-        CharmDaughter['Pz'] = t.Pz.at(vtx),
+        CharmDaughter['Pz'] += t.Pz.at(vtx),
         CharmDaughter['P'] += t.P.at(vtx),
         CharmDaughter['PosX'] += t.StartX.at(vtx),
         CharmDaughter['PosY'] += t.StartY.at(vtx),
         CharmDaughter['PosZ'] += t.StartZ.at(vtx),
         CharmDaughter['PDG'] += t.PdgCode.at(vtx),
-        #CDauPos_i.append(t.StartX.at(vtx))
-        #CDauPos_j.append(t.StartY.at(vtx))
-        #CDauPos_k.append(t.StartZ.at(vtx))
-        #CDauMom_i.append(t.Px.at(vtx))
-        #CDauMom_j.append(t.Py.at(vtx))
-        #CDauMom_k.append(t.Pz.at(vtx))
-        #CDauMom_l.append(t.P.at(vtx))
-        #CDauPdg.append(t.PdgCode.at(vtx))
-    #CDauPos = [CDauPos_i[0],CDauPos_j[0],CDauPos_k[0]]      #Charm Decay Position
-    CharmDaughter['Pos'] += CharmDaughter['PosX'][0], CharmDaughter['PosY'][0], CharmDaughter['PosZ'][0]
 
+
+    """ Here I will declare my new model of position. Neutrino and Charm Positions here refers to the point that they decay! """
+    Neutrino['Pos'] += NeutrinoDaughter['PosX'][0], NeutrinoDaughter['PosY'][0], NeutrinoDaughter['PosZ'][0],        ## Anyway the neutrino decays at one of its daughters start point and Charm is one of them
+    Charm['Pos'] += CharmDaughter['PosX'][0], CharmDaughter['PosY'][0], CharmDaughter['PosZ'][0],        ## Anyway the charm decays at one of its daughters start point and so on..
+
+    """ Here I will do some physics calculations! """
     NOP = ProngCount(CharmDaughter['PDG'])
     ch = ChannelDecision(Charm['PDG'], NOP)
 
@@ -283,47 +266,63 @@ for event in xrange(nEnt):
     MultSec = Multiplicity(CharmDaughter['PDG'], Chargeless)         #Multiplicity at Charm Vertex
 
     CSX = Slope(Charm['Px'], Charm['Pz'])           #Charm Slope in X-axis
-    CSY = Slope(Charm['Py'], Charm['Pz'])
+    CSY = Slope(Charm['Py'], Charm['Pz'])           #Charm Slope in X-axis
+    angNuX = Slope(t.Px.at(vtx), t.Pz.at(vtx))*1000     #in mrad
+    angNuY = Slope(t.Py.at(vtx), t.Pz.at(vtx))*1000     #in mrad
     angSpc = (angNuX**2 + angNuY**2)**0.5       #Space Angle of Neutrino
 
-    fL = FlightLength(CharmDaughter['Pos'], Charm['Pos'])*10.0    #in mm
-    iP = ImpactParameterV2(Charm['Pos'], CharmDaughter['Pos'], CSX, CSY)*1e4     #in micro-m
+    fL = FlightLength(Charm['Pos'], Neutrino['Pos'])*10.0    #in mm
+    iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CSX, CSY)*1e4     #in micro-m
 
-    BjorX = Bjorken(mom4_nu, mom4_lept, mom4_nucl)
-    InelY = Inelasticity(mom4_nu, mom4_lept, mom4_nucl)
+    """
+    # They are needed for s-quark content search
+    #BjorX = Bjorken(mom4_nu, mom4_lept, mom4_nucl)
+    BjorX = Bjorken( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
+                     r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
+                     mom4_nucl )
+    #InelY = Inelasticity(mom4_nu, mom4_lept, mom4_nucl)
+    InelY = Inelasticity( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
+                     r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
+                     mom4_nucl )
+    """
 
+    """ At this point, selection rules are started to be applied! """
     #Geometry Selection Check // Checked at Each Vertex
-    if GeometrySelection(Charm['Pos']):
+    if GeometrySelection(Neutrino['Pos']):
       GS.append(True)
     else: GS.append(False)
-    if GeometrySelection(CharmDaughter['Pos']):
+    if GeometrySelection(Charm['Pos']):
       GS.append(True)
     else: GS.append(False)
 
     #Location Selection Check // Checked at Neutrino Vertex
-    for b in xrange(len(NeutrinoDaughter['Px'])):
-      Mom = ( NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b] )
-      if LocationSelection(Mom,NeutrinoDaughter['PDG'][b]):
+    for b in xrange(len(NeutrinoDaughter['P'])):
+      #Mom = ( NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b] )
+      #if LocationSelection(Mom,NeutrinoDaughter['PDG'][b]):
+      if LocationSelection( (NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b]),
+                            NeutrinoDaughter['PDG'][b] ):
         LS.append(True)
       else: LS.append(False)
 
     #Decay Search Selection Check // Checked at Charm Vertex
     if NOP==1:
-      for c in xrange(len(CharmDaughter['Px'])):
-        CDauMom = ( CharmDaughter['Px'][c],CharmDaughter['Py'][c],CharmDaughter['Pz'][c],CharmDaughter['P'][c] )
-        CDSX = Slope(CDauMom[0], CDauMom[2])
-        CDSY = Slope(CDauMom[1], CDauMom[2])
+      for c in xrange(len(CharmDaughter['P'])):
+        #CDauMom = ( CharmDaughter['Px'][c],CharmDaughter['Py'][c],CharmDaughter['Pz'][c],CharmDaughter['P'][c] )
+        #CDSX = Slope(CDauMom[0], CDauMom[2])
+        #CDSY = Slope(CDauMom[1], CDauMom[2])
+        CDSX = Slope( CharmDaughter['Px'][c], CharmDaughter['Pz'][c] )
+        CDSY = Slope( CharmDaughter['Py'][c], CharmDaughter['Pz'][c] )
         kA = KinkAngle(CSX, CSY, CDSX, CDSY)   #in rad
         oA = 2100
         if DecaySearchSelection(fL, kA*1e3, iP, oA):
           DSS.append(True)
         else: DSS.append(False)
     elif NOP==2:
-      CDSX, CDSY = [], []
+      CDSX, CDSY = (), ()
       for d in xrange(len(CharmDaughter['PDG'])):
         if CharmDaughter['PDG'][d] not in Chargeless:
-          CDSX.append(Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d]))
-          CDSY.append(Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d]))
+          CDSX += Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d]),
+          CDSY += Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d]),
       oA = OpeningAngle(CDSX[0], CDSY[0], CDSX[1], CDSY[1])   #in rad
       kA = 2100
       if DecaySearchSelection(fL, kA, iP, oA*1e3):
@@ -336,39 +335,50 @@ for event in xrange(nEnt):
         DSS.append(True)
       else: DSS.append(False)
 
-    #if CPdg in [411, 431, 4122] and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    """ Some events include more than expected prongs. They should be removed! """
+    #if Charm['PDG'] in [411, 431, 4122] and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
 
-    if (CPdg == 411) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
-    #if (CPdg == 411):    # 5 and 7 Prongs have been deleted
+    if (Charm['PDG'] == 411) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    #if (Charm['PDG'] == 411):    # 5 and 7 Prongs have been deleted
       delProng = True
-    if (CPdg == 431) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
-    #if (CPdg == 431):    # 5 and 7 Prongs have been deleted
+    if (Charm['PDG'] == 431) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    #if (Charm['PDG'] == 431):    # 5 and 7 Prongs have been deleted
       delProng = True
-    if (CPdg == 4122) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
-    #if (CPdg == 4122):    # 5 and 7 Prongs have been deleted
+    if (Charm['PDG'] == 4122) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
+    #if (Charm['PDG'] == 4122):    # 5 and 7 Prongs have been deleted
       delProng = True
-    if (CPdg == 421) and NOP not in [0, 2, 4]:      # 6 Prong has been deleted
-    #if (CPdg == 421):      # 6 Prong has been deleted
+    if (Charm['PDG'] == 421) and NOP not in [0, 2, 4]:      # 6 Prong has been deleted
+    #if (Charm['PDG'] == 421):      # 6 Prong has been deleted
       delProng = True
-    if lEnergy == 0:
-      delProng == True
+    if Lepton == {}:
+      delProng = True
 
     if not delProng:
 
-      h['nuE'].Fill(nuEnergy)
-      h['eCorr'].Fill(nuEnergy,lEnergy)
-      h['fCorr'].Fill(nuEnergy,fL)
-      h['iCorr'].Fill(nuEnergy,iP)
+      # They are needed for s-quark content search
+      #BjorX = Bjorken(mom4_nu, mom4_lept, mom4_nucl)
+      BjorX = Bjorken( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
+                       r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
+                       mom4_nucl )
+      #InelY = Inelasticity(mom4_nu, mom4_lept, mom4_nucl)
+      InelY = Inelasticity( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
+                       r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
+                       mom4_nucl )
+
+      h['nuE'].Fill(Neutrino['E'])
+      h['eCorr'].Fill(Neutrino['E'],Lepton['E'])
+      h['fCorr'].Fill(Neutrino['E'],fL)
+      h['iCorr'].Fill(Neutrino['E'],iP)
       if NOP == 0:
-        h['okCorr'].Fill(nuEnergy,oA)
+        h['okCorr'].Fill(Neutrino['E'],oA)
       if NOP == 1:
-        h['okCorr'].Fill(nuEnergy,kA)
+        h['okCorr'].Fill(Neutrino['E'],kA)
       h['nuAngDistXF'].Fill(angNuX)
       h['nuAngDistYF'].Fill(angNuY)
       h['nuAngSpcF'].Fill(angSpc)
       h['nuAng2DF'].Fill(angNuX,angNuY)
 
-      if nuEnergy <= 100.:
+      if Neutrino['E'] <= 100.:
           h['nuAngDistXB'].Fill(angNuX)
           h['nuAngDistYB'].Fill(angNuY)
           h['nuAng2DB'].Fill(angNuX,angNuY)
@@ -377,37 +387,37 @@ for event in xrange(nEnt):
           h['nuAngDistYA'].Fill(angNuY)
           h['nuAng2DA'].Fill(angNuX,angNuY)
 
-      CharmFraction(CPdg, CCounter)
-      h['tplane'].Fill(Charm['Pos'][0], Charm['Pos'][1])
-      h['za'].Fill(Pos[2])
+      CharmFraction(Charm['PDG'], CCounter)
+      h['tplane'].Fill(Neutrino['Pos'][0], Neutrino['Pos'][1])
+      h['za'].Fill(Neutrino['Pos'][2])
       h['BjorX'].Fill(BjorX)
       h['InelY'].Fill(InelY)
 
       inGeo += 1.
 
-      if CPdg == 411:
-        h['dC1E'].Fill(CEnergy)
+      if Charm['PDG'] == 411:
+        h['dC1E'].Fill(Charm['E'])
         h['dC1FL'].Fill(fL)
         h['dC1IP'].Fill(iP)
         h['dC1KA'].Fill(kA)
         h['dC1M'].Fill(MultPri)
         h['dC1M2'].Fill(MultSec)
-      elif CPdg== 421:
-        h['dC2E'].Fill(CEnergy)
+      elif Charm['PDG']== 421:
+        h['dC2E'].Fill(Charm['E'])
         h['dC2FL'].Fill(fL)
         h['dC2IP'].Fill(iP)
         h['dC2OA'].Fill(oA)
         h['dC2M'].Fill(MultPri)
         h['dC2M2'].Fill(MultSec)
-      elif CPdg == 431:
-        h['dC3E'].Fill(CEnergy)
+      elif Charm['PDG'] == 431:
+        h['dC3E'].Fill(Charm['E'])
         h['dC3FL'].Fill(fL)
         h['dC3IP'].Fill(iP)
         h['dC3KA'].Fill(kA)
         h['dC3M'].Fill(MultPri)
         h['dC3M2'].Fill(MultSec)
-      elif CPdg == 4122:
-        h['dC4E'].Fill(CEnergy)
+      elif Charm['PDG'] == 4122:
+        h['dC4E'].Fill(Charm['E'])
         h['dC4FL'].Fill(fL)
         h['dC4IP'].Fill(iP)
         h['dC4KA'].Fill(kA)
@@ -416,46 +426,46 @@ for event in xrange(nEnt):
 
       if False not in GS:
         if ch != 20:
-          h['g-nuEs'].Fill(nuEnergy)
-          h['g-eCorrs'].Fill(nuEnergy,lEnergy)
+          h['g-nuEs'].Fill(Neutrino['E'])
+          h['g-eCorrs'].Fill(Neutrino['E'],Lepton['E'])
         if True in LS:
           if ch!= 20:
-            h['l-nuEs'].Fill(nuEnergy)
-            h['l-eCorrs'].Fill(nuEnergy,lEnergy)
+            h['l-nuEs'].Fill(Neutrino['E'])
+            h['l-eCorrs'].Fill(Neutrino['E'],Lepton['E'])
             if fL < 4.:
-                h['d-nuEsFL'].Fill(nuEnergy)
+                h['d-nuEsFL'].Fill(Neutrino['E'])
             if iP > 10.:
-                h['d-nuEsIP'].Fill(nuEnergy)
+                h['d-nuEsIP'].Fill(Neutrino['E'])
             if (kA*1e3 > 10. and oA*1e3 > 20.):
-                h['d-nuEsOKA'].Fill(nuEnergy)
+                h['d-nuEsOKA'].Fill(Neutrino['E'])
           if True in DSS:
-            if CPdg == 411:
-              h['d-nuEs1'].Fill(nuEnergy)
-              h['dC1ES'].Fill(CEnergy)
+            if Charm['PDG'] == 411:
+              h['d-nuEs1'].Fill(Neutrino['E'])
+              h['dC1ES'].Fill(Charm['E'])
               h['dC1FLS'].Fill(fL)
               h['dC1IPS'].Fill(iP)
               h['dC1KAS'].Fill(kA)
               h['dC1MS'].Fill(MultPri)
               h['dC1M2S'].Fill(MultSec)
-            elif CPdg==421 and ch!=20:
-              h['d-nuEs2'].Fill(nuEnergy)
-              h['dC2ES'].Fill(CEnergy)
+            elif Charm['PDG']==421 and ch!=20:
+              h['d-nuEs2'].Fill(Neutrino['E'])
+              h['dC2ES'].Fill(Charm['E'])
               h['dC2FLS'].Fill(fL)
               h['dC2IPS'].Fill(iP)
               h['dC2OAS'].Fill(oA)
               h['dC2MS'].Fill(MultPri)
               h['dC2M2S'].Fill(MultSec)
-            elif CPdg == 431:
-              h['d-nuEs3'].Fill(nuEnergy)
-              h['dC3ES'].Fill(CEnergy)
+            elif Charm['PDG'] == 431:
+              h['d-nuEs3'].Fill(Neutrino['E'])
+              h['dC3ES'].Fill(Charm['E'])
               h['dC3FLS'].Fill(fL)
               h['dC3IPS'].Fill(iP)
               h['dC3KAS'].Fill(kA)
               h['dC3MS'].Fill(MultPri)
               h['dC3M2S'].Fill(MultSec)
-            elif CPdg == 4122:
-              h['d-nuEs4'].Fill(nuEnergy)
-              h['dC4ES'].Fill(CEnergy)
+            elif Charm['PDG'] == 4122:
+              h['d-nuEs4'].Fill(Neutrino['E'])
+              h['dC4ES'].Fill(Charm['E'])
               h['dC4FLS'].Fill(fL)
               h['dC4IPS'].Fill(iP)
               h['dC4KAS'].Fill(kA)
@@ -463,20 +473,20 @@ for event in xrange(nEnt):
               h['dC4M2S'].Fill(MultSec)
 
             if ch!=20:
-              h['d-nuEs'].Fill(nuEnergy)
-              h['d-eCorrs'].Fill(nuEnergy,lEnergy)
-              h['d-fCorrs'].Fill(nuEnergy,fL)
-              h['d-iCorrs'].Fill(nuEnergy,iP)
+              h['d-nuEs'].Fill(Neutrino['E'])
+              h['d-eCorrs'].Fill(Neutrino['E'],Lepton['E'])
+              h['d-fCorrs'].Fill(Neutrino['E'],fL)
+              h['d-iCorrs'].Fill(Neutrino['E'],iP)
               if NOP == 0:
-                h['d-okCorrs'].Fill(nuEnergy,oA)
+                h['d-okCorrs'].Fill(Neutrino['E'],oA)
               if NOP == 1:
-                h['d-okCorrs'].Fill(nuEnergy,kA)
+                h['d-okCorrs'].Fill(Neutrino['E'],kA)
               h['d-nuAngDistXFs'].Fill(angNuX)
               h['d-nuAngDistYFs'].Fill(angNuY)
               h['d-nuAngSpcFs'].Fill(angSpc)
               h['d-nuAng2DFs'].Fill(angNuX,angNuY)
 
-              if nuEnergy <= 100.:
+              if Neutrino['E'] <= 100.:
                   h['d-nuAngDistXBs'].Fill(angNuX)
                   h['d-nuAngDistYBs'].Fill(angNuY)
                   h['d-nuAng2DBs'].Fill(angNuX,angNuY)
@@ -485,12 +495,12 @@ for event in xrange(nEnt):
                   h['d-nuAngDistYAs'].Fill(angNuY)
                   h['d-nuAng2DAs'].Fill(angNuX,angNuY)
 
-              CharmFraction(CPdg, CCounterS)
-              h['tplaneS'].Fill(NeutrinoDaughter['PosX'][0], NeutrinoDaughter['PosX'][1])
-              h['zaS'].Fill(NeutrinoDaughter['PosX'][3])
+              CharmFraction(Charm['PDG'], CCounterS)
+              h['tplaneS'].Fill(NeutrinoDaughter['PosX'][0], NeutrinoDaughter['PosY'][0])
+              h['zaS'].Fill(NeutrinoDaughter['PosZ'][0])
               h['BjorXs'].Fill(BjorX)
               h['InelYs'].Fill(InelY)
-              #fSquark.write("%s,%s,%s,%s\n" %(event,nuEnergy, BjorX, InelY))
+              #fSquark.write("%s,%s,%s,%s\n" %(event,Neutrino['E'], BjorX, InelY))
 
       if ch == 10:
         if False not in GS:
@@ -1273,8 +1283,11 @@ print '*                                                                        
 print '********************************************************************************************************'
 
 #fSquark.close()
-makePlots(work_dir)
+#makePlots(work_dir)
 
 elikkayalib.finish()
+
+
+print("--- %s seconds ---" % (time.time() - start_time))
 
 #end of the script
