@@ -32,11 +32,17 @@ fGeo = r.gGeoManager
 
 nEnt = t.fChain.GetEntries()
 
-inGeo, tGS, tLS, tDSS = 0., 0., 0., 0.
-d_plus, d_zero, ds_plus, lambda_c = 0., 0., 0., 0.
-CCounter = [d_plus, d_zero, ds_plus, lambda_c]
-d_plusS, d_zeroS, ds_plusS, lambda_cS = 0., 0., 0., 0.
-CCounterS = [d_plusS, d_zeroS, ds_plusS, lambda_cS]
+""" Some stat counters defined here. """
+# With this Dictionary, I will stat the selections
+CountSelection = { 'inGeo' : 0,
+                   'tGS' : 0,
+                   'tLS' : 0,
+                   'tDSS' : 0 }
+# Do not get confused here. 0th entry in the list is selected, 1th entry is the total!
+CountCharmFlavor = { 'd' : [0,0],
+                     'd0' : [0,0],
+                     'dS' : [0,0],
+                     'lambdaC' : [0,0] }
 
 Hadron = [-130, -211, -321, -2212, 130, 211, 321, 2212]
 Lepton = [-11, -13, -15, 11, 13, 15]
@@ -101,16 +107,6 @@ def DecaySearchSelection(fL, kA, iP, oA): #FlightLength, KinkAngle, ImpactParame
     dsCheck.append(True)
   if sum(dsCheck) != 4: return False
   return True
-
-def CharmFraction(CharmPDG, CCounter):
-  if CharmPDG == 411:
-    CCounter[0] += 1.
-  if CharmPDG == 421:
-    CCounter[1] += 1.
-  if CharmPDG == 431:
-    CCounter[2] += 1.
-  if CharmPDG == 4122:
-    CCounter[3] += 1.
 
 def Eff(Arr):
   try:
@@ -181,21 +177,12 @@ def ChannelDecision(CPdg, NOP):
   if CPdg == 4122 and NOP == 9: ch = 49
   return ch
 
-mom4_nucl = r.TLorentzVector(0., 0., 0., (0.9383+0.9396)/2)        #Global Variable
-
-lYES = 0.
-lNO = 0.
-
+""" Start the event loop! """
 for event in xrange(nEnt):
 
   t.GetEntry(event)
 
   if (t.IntInGeo.at(0)):
-
-    #PVPdg = []  #PrimaryVertexPdg
-    #Mom_i, Mom_j, Mom_k, Mom_l = [], [], [], []         #Primary Vertex Momentum
-    #CDauPdg, CDauPos_i, CDauPos_j, CDauPos_k = [], [], [], []       #Charm PDG and Charm Vertex Position
-    #CDauMom_i, CDauMom_j, CDauMom_k, CDauMom_l = [], [], [], []         #Charm Daughter Momentum
 
     GS, LS, DSS = [], [], []        #Selection Counter Arrays
     delProng = False        #Prong Selector Parameter Default with False
@@ -307,9 +294,6 @@ for event in xrange(nEnt):
     #Decay Search Selection Check // Checked at Charm Vertex
     if NOP==1:
       for c in xrange(len(CharmDaughter['P'])):
-        #CDauMom = ( CharmDaughter['Px'][c],CharmDaughter['Py'][c],CharmDaughter['Pz'][c],CharmDaughter['P'][c] )
-        #CDSX = Slope(CDauMom[0], CDauMom[2])
-        #CDSY = Slope(CDauMom[1], CDauMom[2])
         CDSX = Slope( CharmDaughter['Px'][c], CharmDaughter['Pz'][c] )
         CDSY = Slope( CharmDaughter['Py'][c], CharmDaughter['Pz'][c] )
         kA = KinkAngle(CSX, CSY, CDSX, CDSY)   #in rad
@@ -356,14 +340,12 @@ for event in xrange(nEnt):
     if not delProng:
 
       # They are needed for s-quark content search
-      #BjorX = Bjorken(mom4_nu, mom4_lept, mom4_nucl)
       BjorX = Bjorken( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
                        r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
-                       mom4_nucl )
-      #InelY = Inelasticity(mom4_nu, mom4_lept, mom4_nucl)
+                       r.TLorentzVector(0., 0., 0., (0.9383+0.9396)/2) )
       InelY = Inelasticity( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
                        r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
-                       mom4_nucl )
+                       r.TLorentzVector(0., 0., 0., (0.9383+0.9396)/2) )
 
       h['nuE'].Fill(Neutrino['E'])
       h['eCorr'].Fill(Neutrino['E'],Lepton['E'])
@@ -387,15 +369,15 @@ for event in xrange(nEnt):
           h['nuAngDistYA'].Fill(angNuY)
           h['nuAng2DA'].Fill(angNuX,angNuY)
 
-      CharmFraction(Charm['PDG'], CCounter)
       h['tplane'].Fill(Neutrino['Pos'][0], Neutrino['Pos'][1])
       h['za'].Fill(Neutrino['Pos'][2])
       h['BjorX'].Fill(BjorX)
       h['InelY'].Fill(InelY)
 
-      inGeo += 1.
+      CountSelection['inGeo'] += 1.
 
       if Charm['PDG'] == 411:
+        CountCharmFlavor['d'][1] += 1
         h['dC1E'].Fill(Charm['E'])
         h['dC1FL'].Fill(fL)
         h['dC1IP'].Fill(iP)
@@ -403,6 +385,7 @@ for event in xrange(nEnt):
         h['dC1M'].Fill(MultPri)
         h['dC1M2'].Fill(MultSec)
       elif Charm['PDG']== 421:
+        CountCharmFlavor['d0'][1] += 1
         h['dC2E'].Fill(Charm['E'])
         h['dC2FL'].Fill(fL)
         h['dC2IP'].Fill(iP)
@@ -410,6 +393,7 @@ for event in xrange(nEnt):
         h['dC2M'].Fill(MultPri)
         h['dC2M2'].Fill(MultSec)
       elif Charm['PDG'] == 431:
+        CountCharmFlavor['dS'][1] += 1
         h['dC3E'].Fill(Charm['E'])
         h['dC3FL'].Fill(fL)
         h['dC3IP'].Fill(iP)
@@ -417,6 +401,7 @@ for event in xrange(nEnt):
         h['dC3M'].Fill(MultPri)
         h['dC3M2'].Fill(MultSec)
       elif Charm['PDG'] == 4122:
+        CountCharmFlavor['lambdaC'][1] += 1
         h['dC4E'].Fill(Charm['E'])
         h['dC4FL'].Fill(fL)
         h['dC4IP'].Fill(iP)
@@ -440,6 +425,7 @@ for event in xrange(nEnt):
                 h['d-nuEsOKA'].Fill(Neutrino['E'])
           if True in DSS:
             if Charm['PDG'] == 411:
+              CountCharmFlavor['d'][0] += 1
               h['d-nuEs1'].Fill(Neutrino['E'])
               h['dC1ES'].Fill(Charm['E'])
               h['dC1FLS'].Fill(fL)
@@ -448,6 +434,7 @@ for event in xrange(nEnt):
               h['dC1MS'].Fill(MultPri)
               h['dC1M2S'].Fill(MultSec)
             elif Charm['PDG']==421 and ch!=20:
+              CountCharmFlavor['d0'][0] += 1
               h['d-nuEs2'].Fill(Neutrino['E'])
               h['dC2ES'].Fill(Charm['E'])
               h['dC2FLS'].Fill(fL)
@@ -456,6 +443,7 @@ for event in xrange(nEnt):
               h['dC2MS'].Fill(MultPri)
               h['dC2M2S'].Fill(MultSec)
             elif Charm['PDG'] == 431:
+              CountCharmFlavor['dS'][0] += 1
               h['d-nuEs3'].Fill(Neutrino['E'])
               h['dC3ES'].Fill(Charm['E'])
               h['dC3FLS'].Fill(fL)
@@ -464,6 +452,7 @@ for event in xrange(nEnt):
               h['dC3MS'].Fill(MultPri)
               h['dC3M2S'].Fill(MultSec)
             elif Charm['PDG'] == 4122:
+              CountCharmFlavor['lambdaC'][0] += 1
               h['d-nuEs4'].Fill(Neutrino['E'])
               h['dC4ES'].Fill(Charm['E'])
               h['dC4FLS'].Fill(fL)
@@ -495,7 +484,6 @@ for event in xrange(nEnt):
                   h['d-nuAngDistYAs'].Fill(angNuY)
                   h['d-nuAng2DAs'].Fill(angNuX,angNuY)
 
-              CharmFraction(Charm['PDG'], CCounterS)
               h['tplaneS'].Fill(NeutrinoDaughter['PosX'][0], NeutrinoDaughter['PosY'][0])
               h['zaS'].Fill(NeutrinoDaughter['PosZ'][0])
               h['BjorXs'].Fill(BjorX)
@@ -504,13 +492,13 @@ for event in xrange(nEnt):
 
       if ch == 10:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P0g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P0l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P0d.append(True)
             else: C1P0d.append(False)
           else: C1P0l.append(False), C1P0d.append(False)
@@ -518,13 +506,13 @@ for event in xrange(nEnt):
 
       if ch == 20:
         if False not in GS:
-          tGS += 0.
+          CountSelection['tGS'] += 0.
           C2P0g.append(False)
           if True in LS:
-            tLS += 0.
+            CountSelection['tLS'] += 0.
             C2P0l.append(False)
             if True in DSS:
-              tDSS += 0.
+              CountSelection['tDSS'] += 0.
               C2P0d.append(False)
             else: C2P0d.append(False)
           else: C2P0l.append(False), C2P0d.append(False)
@@ -532,13 +520,13 @@ for event in xrange(nEnt):
 
       if ch == 30:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P0g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P0l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P0d.append(True)
             else: C3P0d.append(False)
           else: C3P0l.append(False), C3P0d.append(False)
@@ -546,13 +534,13 @@ for event in xrange(nEnt):
 
       if ch == 40:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P0g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P0l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P0d.append(True)
             else: C4P0d.append(False)
           else: C4P0l.append(False), C4P0d.append(False)
@@ -560,13 +548,13 @@ for event in xrange(nEnt):
 
       if ch == 11:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P1g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P1l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P1d.append(True)
             else: C1P1d.append(False)
           else: C1P1l.append(False), C1P1d.append(False)
@@ -574,13 +562,13 @@ for event in xrange(nEnt):
 
       if ch == 21:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P1g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P1l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P1d.append(True)
             else: C2P1d.append(False)
           else: C2P1l.append(False), C2P1d.append(False)
@@ -588,13 +576,13 @@ for event in xrange(nEnt):
 
       if ch == 31:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P1g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P1l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P1d.append(True)
             else: C3P1d.append(False)
           else: C3P1l.append(False), C3P1d.append(False)
@@ -602,13 +590,13 @@ for event in xrange(nEnt):
 
       if ch == 41:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P1g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P1l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P1d.append(True)
             else: C4P1d.append(False)
           else: C4P1l.append(False), C4P1d.append(False)
@@ -616,13 +604,13 @@ for event in xrange(nEnt):
 
       if ch == 12:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P2g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P2l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P2d.append(True)
             else: C1P2d.append(False)
           else: C1P2l.append(False), C1P2d.append(False)
@@ -630,13 +618,13 @@ for event in xrange(nEnt):
 
       if ch == 22:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P2g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P2l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P2d.append(True)
             else: C2P2d.append(False)
           else: C2P2l.append(False), C2P2d.append(False)
@@ -644,13 +632,13 @@ for event in xrange(nEnt):
 
       if ch == 32:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P2g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P2l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P2d.append(True)
             else: C3P2d.append(False)
           else: C3P2l.append(False), C3P2d.append(False)
@@ -658,13 +646,13 @@ for event in xrange(nEnt):
 
       if ch == 42:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P2g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P2l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P2d.append(True)
             else: C4P2d.append(False)
           else: C4P2l.append(False), C4P2d.append(False)
@@ -672,13 +660,13 @@ for event in xrange(nEnt):
 
       if ch == 13:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P3g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P3l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P3d.append(True)
             else: C1P3d.append(False)
           else: C1P3l.append(False), C1P3d.append(False)
@@ -686,13 +674,13 @@ for event in xrange(nEnt):
 
       if ch == 23:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P3g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P3l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P3d.append(True)
             else: C2P3d.append(False)
           else: C2P3l.append(False), C2P3d.append(False)
@@ -700,13 +688,13 @@ for event in xrange(nEnt):
 
       if ch == 33:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P3g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P3l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P3d.append(True)
             else: C3P3d.append(False)
           else: C3P3l.append(False), C3P3d.append(False)
@@ -714,13 +702,13 @@ for event in xrange(nEnt):
 
       if ch == 43:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P3g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P3l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P3d.append(True)
             else: C4P3d.append(False)
           else: C4P3l.append(False), C4P3d.append(False)
@@ -728,13 +716,13 @@ for event in xrange(nEnt):
 
       if ch == 14:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P4g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P4l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P4d.append(True)
             else: C1P4d.append(False)
           else: C1P4l.append(False), C1P4d.append(False)
@@ -742,13 +730,13 @@ for event in xrange(nEnt):
 
       if ch == 24:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P4g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P4l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P4d.append(True)
             else: C2P4d.append(False)
           else: C2P4l.append(False), C2P4d.append(False)
@@ -756,13 +744,13 @@ for event in xrange(nEnt):
 
       if ch == 34:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P4g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P4l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P4d.append(True)
             else: C3P4d.append(False)
           else: C3P4l.append(False), C3P4d.append(False)
@@ -770,13 +758,13 @@ for event in xrange(nEnt):
 
       if ch == 44:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P4g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P4l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P4d.append(True)
             else: C4P4d.append(False)
           else: C4P4l.append(False), C4P4d.append(False)
@@ -784,13 +772,13 @@ for event in xrange(nEnt):
 
       if ch == 15:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P5g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P5l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P5d.append(True)
             else: C1P5d.append(False)
           else: C1P5l.append(False), C1P5d.append(False)
@@ -798,13 +786,13 @@ for event in xrange(nEnt):
 
       if ch == 25:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P5g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P5l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P5d.append(True)
             else: C2P5d.append(False)
           else: C2P5l.append(False), C2P5d.append(False)
@@ -812,13 +800,13 @@ for event in xrange(nEnt):
 
       if ch == 35:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P5g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P5l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P5d.append(True)
             else: C3P5d.append(False)
           else: C3P5l.append(False), C3P5d.append(False)
@@ -826,13 +814,13 @@ for event in xrange(nEnt):
 
       if ch == 45:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P5g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P5l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P5d.append(True)
             else: C4P5d.append(False)
           else: C4P5l.append(False), C4P5d.append(False)
@@ -840,13 +828,13 @@ for event in xrange(nEnt):
 
       if ch == 16:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P6g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P6l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P6d.append(True)
             else: C1P6d.append(False)
           else: C1P6d.append(False), C1P6d.append(False)
@@ -854,13 +842,13 @@ for event in xrange(nEnt):
 
       if ch == 26:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P6g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P6l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P6d.append(True)
             else: C2P6d.append(False)
           else: C2P6d.append(False), C2P6d.append(False)
@@ -868,13 +856,13 @@ for event in xrange(nEnt):
 
       if ch == 36:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P6g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P6l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P6d.append(True)
             else: C3P6d.append(False)
           else: C3P6d.append(False), C3P6d.append(False)
@@ -882,13 +870,13 @@ for event in xrange(nEnt):
 
       if ch == 46:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P6g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P6l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P6d.append(True)
             else: C4P6d.append(False)
           else: C4P6d.append(False), C4P6d.append(False)
@@ -896,13 +884,13 @@ for event in xrange(nEnt):
 
       if ch == 17:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P7g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P7l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P7d.append(True)
             else: C1P7d.append(False)
           else: C1P7l.append(False), C1P7d.append(False)
@@ -910,13 +898,13 @@ for event in xrange(nEnt):
 
       if ch == 27:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P7g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P7l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P7d.append(True)
             else: C2P7d.append(False)
           else: C2P7l.append(False), C2P7d.append(False)
@@ -924,13 +912,13 @@ for event in xrange(nEnt):
 
       if ch == 37:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P7g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P7l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P7d.append(True)
             else: C3P7d.append(False)
           else: C3P7l.append(False), C3P7d.append(False)
@@ -938,13 +926,13 @@ for event in xrange(nEnt):
 
       if ch == 47:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P7g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P7l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P7d.append(True)
             else: C4P7d.append(False)
           else: C4P7l.append(False), C4P7d.append(False)
@@ -952,13 +940,13 @@ for event in xrange(nEnt):
 
       if ch == 18:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P8g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P8l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P8d.append(True)
             else: C1P8d.append(False)
           else: C1P8l.append(False), C1P8d.append(False)
@@ -966,13 +954,13 @@ for event in xrange(nEnt):
 
       if ch == 28:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P8g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P8l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P8d.append(True)
             else: C2P8d.append(False)
           else: C2P8l.append(False), C2P8d.append(False)
@@ -980,13 +968,13 @@ for event in xrange(nEnt):
 
       if ch == 38:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P8g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P8l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P8d.append(True)
             else: C3P8d.append(False)
           else: C3P8l.append(False), C3P8d.append(False)
@@ -994,13 +982,13 @@ for event in xrange(nEnt):
 
       if ch == 48:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P8g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P8l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P8d.append(True)
             else: C4P8d.append(False)
           else: C4P8l.append(False), C4P8d.append(False)
@@ -1008,13 +996,13 @@ for event in xrange(nEnt):
 
       if ch == 19:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C1P9g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C1P9l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C1P9d.append(True)
             else: C1P9d.append(False)
           else: C1P9l.append(False), C1P9d.append(False)
@@ -1022,13 +1010,13 @@ for event in xrange(nEnt):
 
       if ch == 29:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C2P9g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C2P9l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C2P9d.append(True)
             else: C2P9d.append(False)
           else: C2P9l.append(False), C2P9d.append(False)
@@ -1036,13 +1024,13 @@ for event in xrange(nEnt):
 
       if ch == 39:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C3P9g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C3P9l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C3P9d.append(True)
             else: C3P9d.append(False)
           else: C3P9l.append(False), C3P9d.append(False)
@@ -1050,13 +1038,13 @@ for event in xrange(nEnt):
 
       if ch == 49:
         if False not in GS:
-          tGS += 1.
+          CountSelection['tGS'] += 1.
           C4P9g.append(True)
           if True in LS:
-            tLS += 1.
+            CountSelection['tLS'] += 1.
             C4P9l.append(True)
             if True in DSS:
-              tDSS += 1.
+              CountSelection['tDSS'] += 1.
               C4P79.append(True)
             else: C4P9d.append(False)
           else: C4P9l.append(False), C4P9d.append(False)
@@ -1124,7 +1112,7 @@ print 'Lc+ |  %s   %s   %s   %s   %s   %s   %s   %s   %s   %s' %(   \
   Eff(C4P9g)
 )
 
-print '********************************************************************* Geometry Selection Success %.5f' %(tGS/inGeo)
+print '********************************************************************* Geometry Selection Success %.5f' %(CountSelection['tGS']/CountSelection['inGeo'])
 
 print '********************************************************************************************************'
 
@@ -1182,7 +1170,7 @@ print 'Lc+ |  %s   %s   %s   %s   %s   %s   %s   %s   %s   %s' %(   \
   Eff(C4P9l)
 )
 
-print '********************************************************************* Location Selection Success %.5f' %(tLS/inGeo)
+print '********************************************************************* Location Selection Success %.5f' %(CountSelection['tLS']/CountSelection['inGeo'])
 
 print '********************************************************************************************************'
 
@@ -1240,25 +1228,28 @@ print 'Lc+ |  %s   %s   %s   %s   %s   %s   %s   %s   %s   %s' %(   \
   Eff(C4P9d)
 )
 
-print '***************************************************************** Decay Search Selection Success %.5f' %(tDSS/inGeo)
+print '***************************************************************** Decay Search Selection Success %.5f' %(CountSelection['tDSS']/CountSelection['inGeo'])
 
 print '********************************************************************************************************'
 
-CharmSum = sum(CCounter)
-C1FrProd = CCounter[0]/CharmSum
-C2FrProd = CCounter[1]/CharmSum
-C3FrProd = CCounter[2]/CharmSum
-C4FrProd = CCounter[3]/CharmSum
+CharmSum = CountCharmFlavor['d'][1] + \
+           CountCharmFlavor['d0'][1] + \
+           CountCharmFlavor['dS'][1] + \
+           CountCharmFlavor['lambdaC'][1]
+C1FrProd = CountCharmFlavor['d'][1]/CharmSum
+C2FrProd = CountCharmFlavor['d0'][1]/CharmSum
+C3FrProd = CountCharmFlavor['dS'][1]/CharmSum
+C4FrProd = CountCharmFlavor['lambdaC'][1]/CharmSum
 
 h['cFracProd'].Fill(0,C1FrProd)
 h['cFracProd'].Fill(1,C2FrProd)
 h['cFracProd'].Fill(2,C3FrProd)
 h['cFracProd'].Fill(3,C4FrProd)
 
-C1FrSelc = CCounterS[0]/CCounter[0]
-C2FrSelc = CCounterS[1]/CCounter[1]
-C3FrSelc = CCounterS[2]/CCounter[2]
-C4FrSelc = CCounterS[3]/CCounter[3]
+C1FrSelc = CountCharmFlavor['d'][0]/CountCharmFlavor['d'][1]
+C2FrSelc = CountCharmFlavor['d0'][0]/CountCharmFlavor['d0'][1]
+C3FrSelc = CountCharmFlavor['dS'][0]/CountCharmFlavor['dS'][1]
+C4FrSelc = CountCharmFlavor['lambdaC'][0]/CountCharmFlavor['lambdaC'][1]
 
 h['cFracSelc'].Fill(0,C1FrSelc)
 h['cFracSelc'].Fill(1,C2FrSelc)
@@ -1268,15 +1259,15 @@ h['cFracSelc'].Fill(3,C4FrSelc)
 print '    | Production |                            Selection '
 print '    |  Fraction  |  Produced     Selected       Ratio   '
 print '    |  --------  |  --------     --------      -------  '
-print 'D+  |   %.4f   |   %6.0f       %6.0f        %.4f' %(C1FrProd, CCounter[0], CCounterS[0], C1FrSelc)
-print 'D0  |   %.4f   |   %6.0f       %6.0f        %.4f' %(C2FrProd, CCounter[1], CCounterS[1], C2FrSelc)
-print 'Ds+ |   %.4f   |   %6.0f       %6.0f        %.4f' %(C3FrProd, CCounter[2], CCounterS[2], C3FrSelc)
-print 'Lc+ |   %.4f   |   %6.0f       %6.0f        %.4f' %(C4FrProd, CCounter[3], CCounterS[3], C4FrSelc)
+print 'D+  |   %.4f   |   %6.0f       %6.0f        %.4f' %(C1FrProd, CountCharmFlavor['d'][1], CountCharmFlavor['d'][0], C1FrSelc)
+print 'D0  |   %.4f   |   %6.0f       %6.0f        %.4f' %(C2FrProd, CountCharmFlavor['d0'][1], CountCharmFlavor['d0'][0], C2FrSelc)
+print 'Ds+ |   %.4f   |   %6.0f       %6.0f        %.4f' %(C3FrProd, CountCharmFlavor['dS'][1], CountCharmFlavor['dS'][0], C3FrSelc)
+print 'Lc+ |   %.4f   |   %6.0f       %6.0f        %.4f' %(C4FrProd, CountCharmFlavor['lambdaC'][1], CountCharmFlavor['lambdaC'][0], C4FrSelc)
 print '******************************************************************** Associated Charmed Hadron Fractions'
 
 print '********************************************************************************************************'
 print 'Total #of Events | After Geometrical Selection | After Location Selection | After Decay Search Selection'
-print '     %6.0f                 %6.0f                       %6.0f                     %6.0f' %(inGeo, tGS, tLS, tDSS)
+print '     %6.0f                 %6.0f                       %6.0f                     %6.0f' %(CountSelection['inGeo'], CountSelection['tGS'], CountSelection['tLS'], CountSelection['tDSS'])
 
 print '********************************************************************************************************'
 print '*                                                                                                      *'
