@@ -190,15 +190,24 @@ for event in xrange(nEnt):
 
   if (t.IntInGeo.at(0)):
 
-    PVPdg = []  #PrimaryVertexPdg
-    Mom_i, Mom_j, Mom_k, Mom_l = [], [], [], []         #Primary Vertex Momentum
-    CDauPdg, CDauPos_i, CDauPos_j, CDauPos_k = [], [], [], []       #Charm PDG and Charm Vertex Position
-    CDauMom_i, CDauMom_j, CDauMom_k, CDauMom_l = [], [], [], []         #Charm Daughter Momentum
+    #PVPdg = []  #PrimaryVertexPdg
+    #Mom_i, Mom_j, Mom_k, Mom_l = [], [], [], []         #Primary Vertex Momentum
+    #CDauPdg, CDauPos_i, CDauPos_j, CDauPos_k = [], [], [], []       #Charm PDG and Charm Vertex Position
+    #CDauMom_i, CDauMom_j, CDauMom_k, CDauMom_l = [], [], [], []         #Charm Daughter Momentum
 
     GS, LS, DSS = [], [], []        #Selection Counter Arrays
     mom4_nu, mom4_lept = r.TLorentzVector(0., 0., 0., 0.), r.TLorentzVector(0., 0., 0., 0.)        #X-Y Calculators
     nuEnergy, lEnergy = 0., 0.      #Primary Vertex Neutrino and Lepton Energies
     delProng = False        #Prong Selector Parameter Default with False
+
+    #Neutrino = {}      # Define Neutrino Dictionary
+    NeutrinoDaughter = { 'Px' : (), 'Py' : (), 'Pz' : (), 'P' : (),        # Define Neutrino Daughter Dictionary which Contains Tuples
+                      'PosX' : (), 'PosY' : (), 'PosZ' : (), 'Pos' : (),
+                      'PDG' : () }
+    Charm = {}      # Define Charm Dictionary
+    CharmDaughter = { 'Px' : (), 'Py' : (), 'Pz' : (), 'P' : (),        # Define Charm Daughter Dictionary which Contains Tuples
+                      'PosX' : (), 'PosY' : (), 'PosZ' : (), 'Pos' : (),
+                      'PDG' : () }
 
     for vtx in xrange(t.VertexInfo.size()):
 
@@ -209,75 +218,99 @@ for event in xrange(nEnt):
         angNuY = Slope(t.Py.at(vtx), t.Pz.at(vtx))*1000       #in mrad
 
       if t.VertexInfo.at(vtx) == 1:
-        Pos = []
-        Pos.append(t.StartX.at(vtx))
-        Pos.append(t.StartY.at(vtx))
-        Pos.append(t.StartZ.at(vtx))
-        Mom_i.append(t.Px.at(vtx))
-        Mom_j.append(t.Py.at(vtx))
-        Mom_k.append(t.Pz.at(vtx))
-        Mom_l.append(t.P.at(vtx))
-        PVPdg.append(int(t.PdgCode.at(vtx)))
-        if PVPdg[-1] in CharmedHadron:
-          CPos = Pos
-          CMom = []
-          CMom.append(t.Px.at(vtx))
-          CMom.append(t.Py.at(vtx))
-          CMom.append(t.Pz.at(vtx))
-          CMom.append(t.P.at(vtx))
-          CPdg = PVPdg[-1]
-          CEnergy = t.Energy.at(vtx)
-        if PVPdg[-1] in Lepton:
+        NeutrinoDaughter['Px'] += t.Px.at(vtx),
+        NeutrinoDaughter['Py'] += t.Py.at(vtx),
+        NeutrinoDaughter['Pz'] += t.Pz.at(vtx),
+        NeutrinoDaughter['P'] += t.P.at(vtx),
+        NeutrinoDaughter['PosX'] += t.StartX.at(vtx),
+        NeutrinoDaughter['PosY'] += t.StartY.at(vtx),
+        NeutrinoDaughter['PosZ'] += t.StartZ.at(vtx),
+        NeutrinoDaughter['PDG'] += t.PdgCode.at(vtx),
+        #Pos = []
+        #Pos.append(t.StartX.at(vtx))
+        #Pos.append(t.StartY.at(vtx))
+        #Pos.append(t.StartZ.at(vtx))
+        #Mom_i.append(t.Px.at(vtx))
+        #Mom_j.append(t.Py.at(vtx))
+        #Mom_k.append(t.Pz.at(vtx))
+        #Mom_l.append(t.P.at(vtx))
+        #PVPdg.append(int(t.PdgCode.at(vtx)))
+        if NeutrinoDaughter['PDG'][-1] in CharmedHadron:
+          Charm = { 'E' : t.Energy.at(vtx),
+                    'Px' : t.Px.at(vtx),
+                    'Py' : t.Py.at(vtx),
+                    'Pz' : t.Pz.at(vtx),
+                    'P' : t.P.at(vtx),
+                    'Pos' : (t.StartX.at(vtx),t.StartY.at(vtx),t.StartZ.at(vtx)),
+                    'PDG' : NeutrinoDaughter['PDG'][-1] }
+          print Charm
+          #CPos = Pos
+          #CMom = []
+          ## CMom.append(t.Px.at(vtx))
+          ## CMom.append(t.Py.at(vtx))
+          ## CMom.append(t.Pz.at(vtx))
+          ## CMom.append(t.P.at(vtx))
+          CPdg = NeutrinoDaughter['PDG'][-1]
+          ## CEnergy = t.Energy.at(vtx)
+        if NeutrinoDaughter['PDG'][-1] in Lepton:
           lEnergy = t.Energy.at(vtx)
           mom4_lept += r.TLorentzVector(t.Px.at(vtx), t.Py.at(vtx), t.Pz.at(vtx), t.Energy.at(vtx))
 
       if t.VertexInfo.at(vtx) == 22:
-        CDauPos_i.append(t.StartX.at(vtx))
-        CDauPos_j.append(t.StartY.at(vtx))
-        CDauPos_k.append(t.StartZ.at(vtx))
-        CDauMom_i.append(t.Px.at(vtx))
-        CDauMom_j.append(t.Py.at(vtx))
-        CDauMom_k.append(t.Pz.at(vtx))
-        CDauMom_l.append(t.P.at(vtx))
-        CDauPdg.append(t.PdgCode.at(vtx))
+        CharmDaughter['Px'] += t.Px.at(vtx),
+        CharmDaughter['Py'] += t.Py.at(vtx),
+        CharmDaughter['Pz'] = t.Pz.at(vtx),
+        CharmDaughter['P'] += t.P.at(vtx),
+        CharmDaughter['PosX'] += t.StartX.at(vtx),
+        CharmDaughter['PosY'] += t.StartY.at(vtx),
+        CharmDaughter['PosZ'] += t.StartZ.at(vtx),
+        CharmDaughter['PDG'] += t.PdgCode.at(vtx),
+        #CDauPos_i.append(t.StartX.at(vtx))
+        #CDauPos_j.append(t.StartY.at(vtx))
+        #CDauPos_k.append(t.StartZ.at(vtx))
+        #CDauMom_i.append(t.Px.at(vtx))
+        #CDauMom_j.append(t.Py.at(vtx))
+        #CDauMom_k.append(t.Pz.at(vtx))
+        #CDauMom_l.append(t.P.at(vtx))
+        #CDauPdg.append(t.PdgCode.at(vtx))
+    #CDauPos = [CDauPos_i[0],CDauPos_j[0],CDauPos_k[0]]      #Charm Decay Position
+    CharmDaughter['Pos'] += CharmDaughter['PosX'][0], CharmDaughter['PosY'][0], CharmDaughter['PosZ'][0]
 
-    CDauPos = [CDauPos_i[0],CDauPos_j[0],CDauPos_k[0]]      #Charm Decay Position
+    NOP = ProngCount(CharmDaughter['PDG'])
+    ch = ChannelDecision(Charm['PDG'], NOP)
 
-    NOP = ProngCount(CDauPdg)
-    ch = ChannelDecision(CPdg, NOP)
+    MultPri = Multiplicity(NeutrinoDaughter['PDG'], Chargeless)       #Multiplicity at Primary Vertex
+    MultSec = Multiplicity(CharmDaughter['PDG'], Chargeless)         #Multiplicity at Charm Vertex
 
-    MultPri = Multiplicity(PVPdg, Chargeless)       #Multiplicity at Primary Vertex
-    MultSec = Multiplicity(CDauPdg, Chargeless)         #Multiplicity at Charm Vertex
-
-    CSX = Slope(CMom[0], CMom[2])           #Charm Slope in X-axis
-    CSY = Slope(CMom[1], CMom[2])
+    CSX = Slope(Charm['Px'], Charm['Pz'])           #Charm Slope in X-axis
+    CSY = Slope(Charm['Py'], Charm['Pz'])
     angSpc = (angNuX**2 + angNuY**2)**0.5       #Space Angle of Neutrino
 
-    fL = FlightLength(CDauPos, CPos)*10.0    #in mm
-    iP = ImpactParameterV2(CPos, CDauPos, CSX, CSY)*1e4     #in micro-m
+    fL = FlightLength(CharmDaughter['Pos'], Charm['Pos'])*10.0    #in mm
+    iP = ImpactParameterV2(Charm['Pos'], CharmDaughter['Pos'], CSX, CSY)*1e4     #in micro-m
 
     BjorX = Bjorken(mom4_nu, mom4_lept, mom4_nucl)
     InelY = Inelasticity(mom4_nu, mom4_lept, mom4_nucl)
 
     #Geometry Selection Check // Checked at Each Vertex
-    if GeometrySelection(Pos):
+    if GeometrySelection(Charm['Pos']):
       GS.append(True)
     else: GS.append(False)
-    if GeometrySelection(CDauPos):
+    if GeometrySelection(CharmDaughter['Pos']):
       GS.append(True)
     else: GS.append(False)
 
     #Location Selection Check // Checked at Neutrino Vertex
-    for b in xrange(len(Mom_i)):
-      Mom = [Mom_i[b],Mom_j[b],Mom_k[b],Mom_l[b]]
-      if LocationSelection(Mom,PVPdg[b]):
+    for b in xrange(len(NeutrinoDaughter['Px'])):
+      Mom = ( NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b] )
+      if LocationSelection(Mom,NeutrinoDaughter['PDG'][b]):
         LS.append(True)
       else: LS.append(False)
 
     #Decay Search Selection Check // Checked at Charm Vertex
     if NOP==1:
-      for c in xrange(len(CDauMom_i)):
-        CDauMom = [CDauMom_i[c],CDauMom_j[c],CDauMom_k[c],CDauMom_l[c]]
+      for c in xrange(len(CharmDaughter['Px'])):
+        CDauMom = ( CharmDaughter['Px'][c],CharmDaughter['Py'][c],CharmDaughter['Pz'][c],CharmDaughter['P'][c] )
         CDSX = Slope(CDauMom[0], CDauMom[2])
         CDSY = Slope(CDauMom[1], CDauMom[2])
         kA = KinkAngle(CSX, CSY, CDSX, CDSY)   #in rad
@@ -287,10 +320,10 @@ for event in xrange(nEnt):
         else: DSS.append(False)
     elif NOP==2:
       CDSX, CDSY = [], []
-      for d in xrange(len(CDauPdg)):
-        if CDauPdg[d] not in Chargeless:
-          CDSX.append(Slope(CDauMom_i[d],CDauMom_k[d]))
-          CDSY.append(Slope(CDauMom_j[d],CDauMom_k[d]))
+      for d in xrange(len(CharmDaughter['PDG'])):
+        if CharmDaughter['PDG'][d] not in Chargeless:
+          CDSX.append(Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d]))
+          CDSY.append(Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d]))
       oA = OpeningAngle(CDSX[0], CDSY[0], CDSX[1], CDSY[1])   #in rad
       kA = 2100
       if DecaySearchSelection(fL, kA, iP, oA*1e3):
@@ -345,7 +378,7 @@ for event in xrange(nEnt):
           h['nuAng2DA'].Fill(angNuX,angNuY)
 
       CharmFraction(CPdg, CCounter)
-      h['tplane'].Fill(Pos[0], Pos[1])
+      h['tplane'].Fill(Charm['Pos'][0], Charm['Pos'][1])
       h['za'].Fill(Pos[2])
       h['BjorX'].Fill(BjorX)
       h['InelY'].Fill(InelY)
@@ -447,14 +480,14 @@ for event in xrange(nEnt):
                   h['d-nuAngDistXBs'].Fill(angNuX)
                   h['d-nuAngDistYBs'].Fill(angNuY)
                   h['d-nuAng2DBs'].Fill(angNuX,angNuY)
-              else:         
+              else:
                   h['d-nuAngDistXAs'].Fill(angNuX)
                   h['d-nuAngDistYAs'].Fill(angNuY)
                   h['d-nuAng2DAs'].Fill(angNuX,angNuY)
 
               CharmFraction(CPdg, CCounterS)
-              h['tplaneS'].Fill(Pos[0], Pos[1])
-              h['zaS'].Fill(Pos[2])
+              h['tplaneS'].Fill(NeutrinoDaughter['PosX'][0], NeutrinoDaughter['PosX'][1])
+              h['zaS'].Fill(NeutrinoDaughter['PosX'][3])
               h['BjorXs'].Fill(BjorX)
               h['InelYs'].Fill(InelY)
               #fSquark.write("%s,%s,%s,%s\n" %(event,nuEnergy, BjorX, InelY))
