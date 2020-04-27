@@ -245,100 +245,26 @@ for event in xrange(nEnt):
     Neutrino['Pos'] += NeutrinoDaughter['PosX'][0], NeutrinoDaughter['PosY'][0], NeutrinoDaughter['PosZ'][0],        ## Anyway the neutrino decays at one of its daughters start point and Charm is one of them
     Charm['Pos'] += CharmDaughter['PosX'][0], CharmDaughter['PosY'][0], CharmDaughter['PosZ'][0],        ## Anyway the charm decays at one of its daughters start point and so on..
 
-    """ Here I will do some physics calculations! """
+    # Number of prong and decay channel decided here.
     NOP = ProngCount(CharmDaughter['PDG'])
     ch = ChannelDecision(Charm['PDG'], NOP)
 
-    MultPri = Multiplicity(NeutrinoDaughter['PDG'], Chargeless)       #Multiplicity at Primary Vertex
-    MultSec = Multiplicity(CharmDaughter['PDG'], Chargeless)         #Multiplicity at Charm Vertex
-
-    CSX = Slope(Charm['Px'], Charm['Pz'])           #Charm Slope in X-axis
-    CSY = Slope(Charm['Py'], Charm['Pz'])           #Charm Slope in X-axis
-    angNuX = Slope(t.Px.at(vtx), t.Pz.at(vtx))*1000     #in mrad
-    angNuY = Slope(t.Py.at(vtx), t.Pz.at(vtx))*1000     #in mrad
-    angSpc = (angNuX**2 + angNuY**2)**0.5       #Space Angle of Neutrino
-
-    fL = FlightLength(Charm['Pos'], Neutrino['Pos'])*10.0    #in mm
-    iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CSX, CSY)*1e4     #in micro-m
-
-    """
-    # They are needed for s-quark content search
-    #BjorX = Bjorken(mom4_nu, mom4_lept, mom4_nucl)
-    BjorX = Bjorken( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
-                     r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
-                     mom4_nucl )
-    #InelY = Inelasticity(mom4_nu, mom4_lept, mom4_nucl)
-    InelY = Inelasticity( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
-                     r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
-                     mom4_nucl )
-    """
-
-    """ At this point, selection rules are started to be applied! """
-    #Geometry Selection Check // Checked at Each Vertex
-    if GeometrySelection(Neutrino['Pos']):
-      GS.append(True)
-    else: GS.append(False)
-    if GeometrySelection(Charm['Pos']):
-      GS.append(True)
-    else: GS.append(False)
-
-    #Location Selection Check // Checked at Neutrino Vertex
-    for b in xrange(len(NeutrinoDaughter['P'])):
-      #Mom = ( NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b] )
-      #if LocationSelection(Mom,NeutrinoDaughter['PDG'][b]):
-      if LocationSelection( (NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b]),
-                            NeutrinoDaughter['PDG'][b] ):
-        LS.append(True)
-      else: LS.append(False)
-
-    #Decay Search Selection Check // Checked at Charm Vertex
-    if NOP==1:
-      for c in xrange(len(CharmDaughter['P'])):
-        CDSX = Slope( CharmDaughter['Px'][c], CharmDaughter['Pz'][c] )
-        CDSY = Slope( CharmDaughter['Py'][c], CharmDaughter['Pz'][c] )
-        kA = KinkAngle(CSX, CSY, CDSX, CDSY)   #in rad
-        oA = 2100
-        if DecaySearchSelection(fL, kA*1e3, iP, oA):
-          DSS.append(True)
-        else: DSS.append(False)
-    elif NOP==2:
-      CDSX, CDSY = (), ()
-      for d in xrange(len(CharmDaughter['PDG'])):
-        if CharmDaughter['PDG'][d] not in Chargeless:
-          CDSX += Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d]),
-          CDSY += Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d]),
-      oA = OpeningAngle(CDSX[0], CDSY[0], CDSX[1], CDSY[1])   #in rad
-      kA = 2100
-      if DecaySearchSelection(fL, kA, iP, oA*1e3):
-        DSS.append(True)
-      else: DSS.append(False)
-    else:
-      kA = 2100
-      oA = 2100
-      if DecaySearchSelection(fL, kA, iP, oA):
-        DSS.append(True)
-      else: DSS.append(False)
-
     """ Some events include more than expected prongs. They should be removed! """
     #if Charm['PDG'] in [411, 431, 4122] and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
-
     if (Charm['PDG'] == 411) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
-    #if (Charm['PDG'] == 411):    # 5 and 7 Prongs have been deleted
       delProng = True
     if (Charm['PDG'] == 431) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
-    #if (Charm['PDG'] == 431):    # 5 and 7 Prongs have been deleted
       delProng = True
     if (Charm['PDG'] == 4122) and NOP not in [1, 3]:    # 5 and 7 Prongs have been deleted
-    #if (Charm['PDG'] == 4122):    # 5 and 7 Prongs have been deleted
       delProng = True
     if (Charm['PDG'] == 421) and NOP not in [0, 2, 4]:      # 6 Prong has been deleted
-    #if (Charm['PDG'] == 421):      # 6 Prong has been deleted
       delProng = True
     if Lepton == {}:
       delProng = True
 
     if not delProng:
 
+      """ Some physics calculation. """
       # They are needed for s-quark content search
       BjorX = Bjorken( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
                        r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
@@ -346,7 +272,66 @@ for event in xrange(nEnt):
       InelY = Inelasticity( r.TLorentzVector(Neutrino['Px'], Neutrino['Py'], Neutrino['Pz'], Neutrino['E']),
                        r.TLorentzVector(Lepton['Px'], Lepton['Py'], Lepton['Pz'], Lepton['E']),
                        r.TLorentzVector(0., 0., 0., (0.9383+0.9396)/2) )
+      # Slope and angle calculations
+      CSX = Slope(Charm['Px'], Charm['Pz'])           #Charm Slope in X-axis
+      CSY = Slope(Charm['Py'], Charm['Pz'])           #Charm Slope in X-axis
+      angNuX = Slope(t.Px.at(vtx), t.Pz.at(vtx))*1000     #in mrad
+      angNuY = Slope(t.Py.at(vtx), t.Pz.at(vtx))*1000     #in mrad
+      angSpc = (angNuX**2 + angNuY**2)**0.5       #Space Angle of Neutrino
+      # Flight length and impact parameter calculations
+      fL = FlightLength(Charm['Pos'], Neutrino['Pos'])*10.0    #in mm
+      iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CSX, CSY)*1e4     #in micro-m
+      # Multiplicity calculations
+      MultPri = Multiplicity(NeutrinoDaughter['PDG'], Chargeless)       #Multiplicity at Primary Vertex
+      MultSec = Multiplicity(CharmDaughter['PDG'], Chargeless)         #Multiplicity at Charm Vertex
 
+      """ At this point, selection rules are started to be applied! """
+      #Geometry Selection Check // Checked at Each Vertex
+      if GeometrySelection(Neutrino['Pos']):
+        GS.append(True)
+      else: GS.append(False)
+      if GeometrySelection(Charm['Pos']):
+        GS.append(True)
+      else: GS.append(False)
+
+      #Location Selection Check // Checked at Neutrino Vertex
+      for b in xrange(len(NeutrinoDaughter['P'])):
+        #Mom = ( NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b] )
+        #if LocationSelection(Mom,NeutrinoDaughter['PDG'][b]):
+        if LocationSelection( (NeutrinoDaughter['Px'][b],NeutrinoDaughter['Py'][b],NeutrinoDaughter['Pz'][b],NeutrinoDaughter['P'][b]),
+                              NeutrinoDaughter['PDG'][b] ):
+          LS.append(True)
+        else: LS.append(False)
+
+      #Decay Search Selection Check // Checked at Charm Vertex
+      if NOP==1:
+        for c in xrange(len(CharmDaughter['P'])):
+          CDSX = Slope( CharmDaughter['Px'][c], CharmDaughter['Pz'][c] )
+          CDSY = Slope( CharmDaughter['Py'][c], CharmDaughter['Pz'][c] )
+          kA = KinkAngle(CSX, CSY, CDSX, CDSY)   #in rad
+          oA = 2100
+          if DecaySearchSelection(fL, kA*1e3, iP, oA):
+            DSS.append(True)
+          else: DSS.append(False)
+      elif NOP==2:
+        CDSX, CDSY = (), ()
+        for d in xrange(len(CharmDaughter['PDG'])):
+          if CharmDaughter['PDG'][d] not in Chargeless:
+            CDSX += Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d]),
+            CDSY += Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d]),
+        oA = OpeningAngle(CDSX[0], CDSY[0], CDSX[1], CDSY[1])   #in rad
+        kA = 2100
+        if DecaySearchSelection(fL, kA, iP, oA*1e3):
+          DSS.append(True)
+        else: DSS.append(False)
+      else:
+        kA = 2100
+        oA = 2100
+        if DecaySearchSelection(fL, kA, iP, oA):
+          DSS.append(True)
+        else: DSS.append(False)
+
+      """ I will examine the rest in detailed. """
       h['nuE'].Fill(Neutrino['E'])
       h['eCorr'].Fill(Neutrino['E'],Lepton['E'])
       h['fCorr'].Fill(Neutrino['E'],fL)
