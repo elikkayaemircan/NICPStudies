@@ -45,7 +45,7 @@ CountCharmFlavor = { 'd' : [0,0],
                      'lambdaC' : [0,0] }
 
 Hadron = [-130, -211, -321, -2212, 130, 211, 321, 2212]
-Lepton = [-11, -13, -15, 11, 13, 15]
+Leptons = [-11, -13, -15, 11, 13, 15]
 
 CharmedHadron = [411, 421, 431, 4122]
 Chargeless = [-14, 22, 111, 130, 421, 2112]
@@ -224,7 +224,7 @@ for event in xrange(nEnt):
                     'P' : t.P.at(vtx),
                     'Pos' : (),
                     'PDG' : NeutrinoDaughter['PDG'][-1] }
-        if NeutrinoDaughter['PDG'][-1] in Lepton:
+        if NeutrinoDaughter['PDG'][-1] in Leptons:
           Lepton = { 'E' : t.Energy.at(vtx),
                      'Px' : t.Px.at(vtx),
                      'Py' : t.Py.at(vtx),
