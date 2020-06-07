@@ -153,6 +153,9 @@ CounterDict = { 'd1' :       ( [0,0,0,0 ] ), 'd3' :       [0,0,0,0], 'd5' :     
                 'dS1' :      ( [0,0,0,0 ] ), 'dS3' :      [0,0,0,0], 'dS5' :      [0,0,0,0],
                 'lambdaC1' : ( [0,0,0,0 ] ), 'lambdaC3' : [0,0,0,0], 'lambdaC5' : [0,0,0,0] }
 
+for key in CounterDict:
+    ut.bookHist(h, key, str(key)+' Efficiency', 4, 0, 4)
+
 def CalculateEff(tDSS,tIN):
   try:
     eff = float(tDSS)/float(tIN)
@@ -441,6 +444,14 @@ for event in xrange(nEnt):
     bar.next()
 
 bar.finish()
+
+""" Counter data is written into histogram. """
+for key in CounterDict.keys():
+    for x in range(4):
+        h[key].Fill(0,CounterDict[key][0])
+        h[key].Fill(1,CounterDict[key][1])
+        h[key].Fill(2,CounterDict[key][2])
+        h[key].Fill(3,CounterDict[key][3])
 
 """ Data plots will be written into the root file. """
 fOut = r.TFile('RawPlots.root', 'UPDATE')
