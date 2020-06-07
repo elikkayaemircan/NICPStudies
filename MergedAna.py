@@ -467,6 +467,7 @@ GSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][1], CounterDict['d1
           ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][1], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][1], CounterDict['dS3'][0]), '--N/A--', CalculateEff(CounterDict['dS5'][1], CounterDict['dS5'][0]), '--N/A--'],
           ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][1], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][1], CounterDict['lambdaC3'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC5'][1], CounterDict['lambdaC5'][0]), '--N/A--'] ]
 print(tabulate(GSProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
+print "Geometric Selection Efficiency:", CalculateEff(sum([ CounterDict[x][1] for x in CounterDict.keys() ]) , sum([ CounterDict[x][0] for x in CounterDict.keys() ])), "\n"
 
 print "## Location Selection"
 LSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][2], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][2], CounterDict['d3'][0]), '--N/A--', CalculateEff(CounterDict['d5'][2], CounterDict['d5'][0]), '--N/A--'],
@@ -474,6 +475,7 @@ LSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][2], CounterDict['d1
           ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][2], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][2], CounterDict['dS3'][0]), '--N/A--', CalculateEff(CounterDict['dS5'][2], CounterDict['dS5'][0]), '--N/A--'],
           ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][2], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][2], CounterDict['lambdaC3'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC5'][2], CounterDict['lambdaC5'][0]), '--N/A--'] ]
 print(tabulate(LSProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
+print "Location Selection Efficiency:", CalculateEff(sum([ CounterDict[x][2] for x in CounterDict.keys() ]) , sum([ CounterDict[x][0] for x in CounterDict.keys() ])), "\n"
 
 print "## Decay Search Selection"
 DSSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][3], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][3], CounterDict['d3'][0]), '--N/A--', CalculateEff(CounterDict['d5'][3], CounterDict['d5'][0]), '--N/A--'],
@@ -481,5 +483,6 @@ DSSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][3], CounterDict['d
           ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][3], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][3], CounterDict['dS3'][0]), '--N/A--', CalculateEff(CounterDict['dS5'][3], CounterDict['dS5'][0]), '--N/A--'],
           ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][3], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][3], CounterDict['lambdaC3'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC5'][3], CounterDict['lambdaC5'][0]), '--N/A--'] ]
 print(tabulate(DSSProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
+print "Decay Search Selection Efficiency:", CalculateEff(sum([ CounterDict[x][3] for x in CounterDict.keys() ]) , sum([ CounterDict[x][0] for x in CounterDict.keys() ])), "\n"
 
 #print("--- %s seconds ---" % (time.time() - start_time))
