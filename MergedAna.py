@@ -487,10 +487,10 @@ def makePlots():
 
 
 """ Counters and inventories defined here. """
-CounterDict = { 'd1' :       ( [0,0,0,0 ] ), 'd3' :       [0,0,0,0],
-                'd00' :      ( [0,0,0,0 ] ), 'd02' :      [0,0,0,0], 'd04' : [0,0,0,0],
-                'dS1' :      ( [0,0,0,0 ] ), 'dS3' :      [0,0,0,0],
-                'lambdaC1' : ( [0,0,0,0 ] ), 'lambdaC3' : [0,0,0,0], }
+CounterDict = { 'd1' :       ( [0,0,0,0 ] ), 'd3' :       [0,0,0,0], 'd5' :       [0,0,0,0],
+                'd00' :      ( [0,0,0,0 ] ), 'd02' :      [0,0,0,0], 'd04' :      [0,0,0,0], 'd06' : [0,0,0,0],
+                'dS1' :      ( [0,0,0,0 ] ), 'dS3' :      [0,0,0,0], 'dS5' :      [0,0,0,0],
+                'lambdaC1' : ( [0,0,0,0 ] ), 'lambdaC3' : [0,0,0,0], 'lambdaC5' : [0,0,0,0] }
 
 def CalculateEff(tDSS,tIN):
   try:
@@ -519,7 +519,7 @@ t.GetEntry(0)
 mcT = t.MCTrack
 
 #nEnt = t.GetEntries()
-nEnt = 25000
+nEnt = 2500
 
 bar = Bar('Processing Events', max = nEnt)
 
@@ -607,9 +607,9 @@ for event in xrange(nEnt):
 
     # Number of Prong should be valid
     NProng = len(tuple( particle for particle in CharmDaughter['PDG'] if particle not in Chargeless ))
-    if Charm['PDG'] in { -421, 421 } and NProng not in { 0, 2, 4 }:
+    if Charm['PDG'] in { -421, 421 } and NProng not in { 0, 2, 4, 6 }:
         delEvent += True,
-    elif Charm['PDG'] in { -431, -411, 411, 431, 4122 } and NProng not in { 1, 3 }:
+    elif Charm['PDG'] in { -431, -411, 411, 431, 4122 } and NProng not in { 1, 3, 5 }:
         delEvent += True,
 
     if True not in delEvent:
@@ -794,10 +794,10 @@ print(tabulate(tableSelection, headers=["# of Events", "Remaining"], tablefmt="s
 
 print "\nEfficiency Stats Respect to Number of Prong ****************"
 
-tableProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][3], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][3], CounterDict['d3'][0]), '--N/A--'],
-          ['D0', CalculateEff(CounterDict['d00'][3], CounterDict['d00'][0]), '--N/A--', CalculateEff(CounterDict['d02'][3], CounterDict['d02'][0]), '--N/A--', CalculateEff(CounterDict['d04'][3], CounterDict['d04'][0])],
-          ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][3], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][3], CounterDict['dS3'][0]), '--N/A--'],
-          ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][3], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][3], CounterDict['lambdaC3'][0]), '--N/A--'] ]
-print(tabulate(tableProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong'], tablefmt="grid" ))
+tableProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][3], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][3], CounterDict['d3'][0]), '--N/A--', CalculateEff(CounterDict['d5'][3], CounterDict['d5'][0]), '--N/A--'],
+          ['D0', CalculateEff(CounterDict['d00'][3], CounterDict['d00'][0]), '--N/A--', CalculateEff(CounterDict['d02'][3], CounterDict['d02'][0]), '--N/A--', CalculateEff(CounterDict['d04'][3], CounterDict['d04'][0]), '--N/A--', CalculateEff(CounterDict['d06'][3], CounterDict['d06'][0])],
+          ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][3], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][3], CounterDict['dS3'][0]), '--N/A--', CalculateEff(CounterDict['dS5'][3], CounterDict['dS5'][0]), '--N/A--'],
+          ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][3], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][3], CounterDict['lambdaC3'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC5'][3], CounterDict['lambdaC5'][0]), '--N/A--'] ]
+print(tabulate(tableProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
 
 #print("--- %s seconds ---" % (time.time() - start_time))
