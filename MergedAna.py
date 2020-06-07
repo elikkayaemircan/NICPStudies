@@ -454,17 +454,32 @@ print "\nNumber of Monte Carlo Events ****************"
 
 tableSelection = [ [nEnt, "Before Any Cut or Selection."],
                    [sum([ CounterDict[x][0] for x in CounterDict.keys() ]), "After Selecting Nu Tau Target."],
-                   [sum([ CounterDict[x][2] for x in CounterDict.keys() ]), "After Geometry Selection."],
+                   [sum([ CounterDict[x][1] for x in CounterDict.keys() ]), "After Geometry Selection."],
                    [sum([ CounterDict[x][2] for x in CounterDict.keys() ]), "After Location Selection."],
                    [sum([ CounterDict[x][3] for x in CounterDict.keys() ]), "After Decay Search Selection."] ]
 print(tabulate(tableSelection, headers=["# of Events", "Remaining"], tablefmt="simple" ))
 
 print "\nEfficiency Stats Respect to Number of Prong ****************"
 
-tableProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][3], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][3], CounterDict['d3'][0]), '--N/A--', CalculateEff(CounterDict['d5'][3], CounterDict['d5'][0]), '--N/A--'],
+print "## Geometric Selection"
+GSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][1], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][1], CounterDict['d3'][0]), '--N/A--', CalculateEff(CounterDict['d5'][1], CounterDict['d5'][0]), '--N/A--'],
+          ['D0', CalculateEff(CounterDict['d00'][1], CounterDict['d00'][0]), '--N/A--', CalculateEff(CounterDict['d02'][1], CounterDict['d02'][0]), '--N/A--', CalculateEff(CounterDict['d04'][1], CounterDict['d04'][0]), '--N/A--', CalculateEff(CounterDict['d06'][1], CounterDict['d06'][0])],
+          ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][1], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][1], CounterDict['dS3'][0]), '--N/A--', CalculateEff(CounterDict['dS5'][1], CounterDict['dS5'][0]), '--N/A--'],
+          ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][1], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][1], CounterDict['lambdaC3'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC5'][1], CounterDict['lambdaC5'][0]), '--N/A--'] ]
+print(tabulate(GSProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
+
+print "## Location Selection"
+LSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][2], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][2], CounterDict['d3'][0]), '--N/A--', CalculateEff(CounterDict['d5'][2], CounterDict['d5'][0]), '--N/A--'],
+          ['D0', CalculateEff(CounterDict['d00'][2], CounterDict['d00'][0]), '--N/A--', CalculateEff(CounterDict['d02'][2], CounterDict['d02'][0]), '--N/A--', CalculateEff(CounterDict['d04'][2], CounterDict['d04'][0]), '--N/A--', CalculateEff(CounterDict['d06'][2], CounterDict['d06'][0])],
+          ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][2], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][2], CounterDict['dS3'][0]), '--N/A--', CalculateEff(CounterDict['dS5'][2], CounterDict['dS5'][0]), '--N/A--'],
+          ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][2], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][2], CounterDict['lambdaC3'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC5'][2], CounterDict['lambdaC5'][0]), '--N/A--'] ]
+print(tabulate(LSProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
+
+print "## Decay Search Selection"
+DSSProng = [ ['D+', '--N/A--', CalculateEff(CounterDict['d1'][3], CounterDict['d1'][0]), '--N/A--', CalculateEff(CounterDict['d3'][3], CounterDict['d3'][0]), '--N/A--', CalculateEff(CounterDict['d5'][3], CounterDict['d5'][0]), '--N/A--'],
           ['D0', CalculateEff(CounterDict['d00'][3], CounterDict['d00'][0]), '--N/A--', CalculateEff(CounterDict['d02'][3], CounterDict['d02'][0]), '--N/A--', CalculateEff(CounterDict['d04'][3], CounterDict['d04'][0]), '--N/A--', CalculateEff(CounterDict['d06'][3], CounterDict['d06'][0])],
           ['Ds+', '--N/A--', CalculateEff(CounterDict['dS1'][3], CounterDict['dS1'][0]), '--N/A--', CalculateEff(CounterDict['dS3'][3], CounterDict['dS3'][0]), '--N/A--', CalculateEff(CounterDict['dS5'][3], CounterDict['dS5'][0]), '--N/A--'],
           ['LambdaC+', '--N/A--', CalculateEff(CounterDict['lambdaC1'][3], CounterDict['lambdaC1'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC3'][3], CounterDict['lambdaC3'][0]), '--N/A--', CalculateEff(CounterDict['lambdaC5'][3], CounterDict['lambdaC5'][0]), '--N/A--'] ]
-print(tabulate(tableProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
+print(tabulate(DSSProng, headers=['0 Prong', '1 Prong', '2 Prong', '3 Prong', '4 Prong', '5 Prong', '6 Prong'], tablefmt="grid" ))
 
 #print("--- %s seconds ---" % (time.time() - start_time))
