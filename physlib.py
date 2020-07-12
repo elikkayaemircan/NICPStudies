@@ -31,9 +31,9 @@ def ImpactParameter(trackPos, trackMom, targetPos):
     IP = r.TMath.Sqrt(dist)
     return IP     #in cm
 
-def ImpactParameterV2(CPos, CDauPos, SlopeX, SlopeY):
-    EPX = CDauPos[0]+(CDauPos[2]-CPos[2])*SlopeX
-    EPY = CDauPos[1]+(CDauPos[2]-CPos[2])*SlopeY
+def ImpactParameterV2(CPos, CDauPos, CDauSlopeX, CDauSlopeY):
+    EPX = CDauPos[0]+(CDauPos[2]-CPos[2])*CDauSlopeX
+    EPY = CDauPos[1]+(CDauPos[2]-CPos[2])*CDauSlopeY
     IP = r.TMath.Sqrt((CPos[0]-EPX)**2 + (CPos[1]-EPY)**2)
     return IP   #in cm
 

@@ -294,9 +294,8 @@ for event in xrange(nEnt):
       angNuY = Slope(Neutrino['Py'], Neutrino['Pz'])*1000     #in mrad
       angSpc = (angNuX**2 + angNuY**2)**0.5       #Space Angle of Neutrino
 
-      # Flight length and impact parameter calculations
+      # Flight length calculation
       fL = FlightLength(Charm['Pos'], Neutrino['Pos'])*10.0    #in mm
-      iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CSX, CSY)*1e4     #in micro-m
 
       # Multiplicity calculations
       MultPri = Multiplicity(NeutrinoDaughter['PDG'], Chargeless)       #Multiplicity at Neutrino Vertex
@@ -325,6 +324,7 @@ for event in xrange(nEnt):
         for c in xrange(len(CharmDaughter['P'])):
           CDSX = Slope( CharmDaughter['Px'][c], CharmDaughter['Pz'][c] )
           CDSY = Slope( CharmDaughter['Py'][c], CharmDaughter['Pz'][c] )
+          iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX, CDSY)*1e4     #in micro-m
           kA = KinkAngle(CSX, CSY, CDSX, CDSY)   #in rad
           oA = 2100
           if DecaySearchSelection(fL, kA*1e3, iP, oA):
@@ -338,15 +338,22 @@ for event in xrange(nEnt):
             CDSY += Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d]),
         oA = OpeningAngle(CDSX[0], CDSY[0], CDSX[1], CDSY[1])   #in rad
         kA = 2100
-        if DecaySearchSelection(fL, kA, iP, oA*1e3):
-          DSS.append(True)
-        else: DSS.append(False)
+        for e in xrange(2):
+            iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX[e], CDSY[e])*1e4     #in micro-m
+            if DecaySearchSelection(fL, kA, iP, oA*1e3):
+              DSS.append(True)
+            else: DSS.append(False)
       else:
         kA = 2100
         oA = 2100
-        if DecaySearchSelection(fL, kA, iP, oA):
-          DSS.append(True)
-        else: DSS.append(False)
+        for d in xrange(len(CharmDaughter['PDG'])):
+          if CharmDaughter['PDG'][d] not in Chargeless:
+            CDSX = Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d])
+            CDSY = Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d])
+            iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX, CDSY)*1e4     #in micro-m
+            if DecaySearchSelection(fL, kA, iP, oA):
+              DSS.append(True)
+            else: DSS.append(False)
 
       """ Fill unselected histograms here. """
       h['nuE'].Fill(Neutrino['E'])
