@@ -1,9 +1,12 @@
 import ROOT as r
 import rootUtils as ut
 
+f = r.TFile("RawPlots.root")
+
 """ Histograms and plots are defined here. """
 h = {}
 
+""" Newly created """
 # Efficiencies Respect to Selections with Neutrino Energy
 ut.bookHist(h, 'g-nuEff', 'Efficiency Plot #nu_{#mu}: Geometric Selection',    60, 0, 300)
 ut.bookHist(h, 'l-nuEff', 'Efficiency Plot #nu_{#mu}: Location Selection',     60, 0, 300)
@@ -13,6 +16,27 @@ ut.bookHist(h, 'd-nuEff1', 'Efficiency Plot #nu_{#mu}: Decay Search Selection', 
 ut.bookHist(h, 'd-nuEff2', 'Efficiency Plot #nu_{#mu}: Decay Search Selection', 60, 0, 300)
 ut.bookHist(h, 'd-nuEff3', 'Efficiency Plot #nu_{#mu}: Decay Search Selection', 60, 0, 300)
 ut.bookHist(h, 'd-nuEff4', 'Efficiency Plot #nu_{#mu}: Decay Search Selection', 60, 0, 300)
+
+""" From Raw Plot root file """
+rawHist = ( 'nuE', 'g-nuEs', 'l-nuEs', 'd-nuEs',        # Incoming Neutrino Beam Energy After Selections
+            'nuE1', 'nuE2', 'nuE3', 'nuE4', 'd-nuEs1', 'd-nuEs2', 'd-nuEs3', 'd-nuEs4',         # Incoming Neutrino Beam Energy Respect to Induced Charm Flavor
+            'dC1M', 'dC1MS', 'dC2M', 'dC2MS', 'dC3M', 'dC3MS', 'dC4M', 'dC4MS',     # Multiplicity at Neutrino Vertex
+            'dC1M2', 'dC1M2S', 'dC2M2', 'dC2M2S', 'dC3M2', 'dC3M2S', 'dC4M2', 'dC4M2S',     # Multiplicity at Charm Vertex
+            'BjorX', 'BjorXs', 'InelY', 'InelYs',        # Bjorken X and Inelasticity Y Distributions
+            'tp', 'tpS', 'za', 'zaS',       # Neutrino Interaction Points in X-Y-Z
+            'nuAngDistXF', 'nuAngDistYF', 'd-nuAngDistXFs', 'd-nuAngDistYFs', 'nuAng2DF', 'd-nuAng2DFs',    # Angular Distribution of Neutrinos in X and Y axis
+            'dC1E', 'dC1ES', 'dC2E', 'dC2ES', 'dC3E', 'dC3ES', 'dC4E', 'dC4ES',     # Charmed Hadron Energy Spectrum
+            'dC1FL', 'dC1FLS', 'dC2FL', 'dC2FLS', 'dC3FL', 'dC3FLS', 'dC4FL', 'dC4FLS',     # Charmed Hadron Flight Length
+            'dC1IP', 'dC1IPS', 'dC2IP', 'dC2IPS', 'dC3IP', 'dC3IPS', 'dC4IP', 'dC4IPS',     # Charmed Hadron Impact Parameter
+            'dC1KA', 'dC1KAS', 'dC3KA', 'dC3KAS', 'dC4KA', 'dC4KAS', 'dC2OA', 'dC2OAS',     # Charmed Hadron Kink and Opening Angle
+        )
+
+""" Add all the hists into the dict h. """
+for hist in rawHist:
+    h[hist] = f.Get(hist)
+
+print rawHist
+print h
 
 def makePlots():
 
@@ -41,7 +65,7 @@ def makePlots():
   h['d-nuEs'].SetFillStyle(3335)
   h['d-nuEs'].SetFillColor(2)
   h['d-nuEs'].Draw('SAMES')
-  h['CnuE'].Print(work_dir+'/Histograms/CnuE.pdf')
+  h['CnuE'].Print('./Histograms/CnuE.pdf')
 
   # Efficiencies Respect to Selections with Neutrino Energy
   ut.bookCanvas(h,key='CnuEff',title='Efficiency Plot',nx=2880,ny=540,cx=3,cy=1)
@@ -67,7 +91,7 @@ def makePlots():
   h['d-nuEff'].Divide(h['d-nuEs'],h['nuE'],1.,1.,'B')
   h['d-nuEff'].Draw('E0')
   h['d-nuEff'].SetXTitle('Energy (GeV)')
-  h['CnuEff'].Print(work_dir+'/Histograms/CnuEff.pdf')
+  h['CnuEff'].Print('./Histograms/CnuEff.pdf')
 
   # Incoming Neutrino Beam Energy Respect to Induced Charm Flavor
   ut.bookCanvas(h,key='CnuEX',title='Incoming Neutrino Beam Energy',nx=1920,ny=1080,cx=2,cy=2)
@@ -100,7 +124,7 @@ def makePlots():
   h['d-nuEs4'].SetFillStyle(3335)
   h['d-nuEs4'].SetFillColor(2)
   h['d-nuEs4'].Draw('SAMES')
-  h['CnuEX'].Print(work_dir+'/Histograms/CnuEX.pdf')
+  h['CnuEX'].Print('./Histograms/CnuEX.pdf')
 
   # DSS Efficiencies Respect Charm Flavor with Neutrino Energy
   ut.bookCanvas(h,key='CnuEffCF',title='Efficiency Plot',nx=1920,ny=1080,cx=2,cy=2)
@@ -133,7 +157,7 @@ def makePlots():
   h['d-nuEff4'].Divide(h['d-nuEs4'],h['nuE4'],1.,1.,'B')
   h['d-nuEff4'].Draw('E0')
   h['d-nuEff4'].SetXTitle('Energy (GeV)')
-  h['CnuEffCF'].Print(work_dir+'/Histograms/CnuEffCF.pdf')
+  h['CnuEffCF'].Print('./Histograms/CnuEffCF.pdf')
 
   #Multiplicity at Neutrino Vertex Histograms
   ut.bookCanvas(h,key='dMultAnalysis',title='Multiplicity at Neutrino Vertex',nx=1920,ny=1080,cx=2,cy=2)
@@ -157,7 +181,7 @@ def makePlots():
   h['dC4MS'].SetFillStyle(3335)
   h['dC4MS'].SetFillColor(2)
   h['dC4MS'].Draw('same')
-  h['dMultAnalysis'].Print(work_dir+'/Histograms/dcmult.pdf')
+  h['dMultAnalysis'].Print('./Histograms/dcmult.pdf')
 
   #Multiplicity at Charm Vertex Histograms
   ut.bookCanvas(h,key='dMultAnalysis2',title='Multiplicity at Charm Vertex',nx=1920,ny=1080,cx=2,cy=2)
@@ -181,7 +205,7 @@ def makePlots():
   h['dC4M2S'].SetFillStyle(3335)
   h['dC4M2S'].SetFillColor(2)
   h['dC4M2S'].Draw('same')
-  h['dMultAnalysis2'].Print(work_dir+'/Histograms/dcmult2.pdf')
+  h['dMultAnalysis2'].Print('./Histograms/dcmult2.pdf')
 
   #Bjorken X distribution
   ut.bookCanvas(h,key='bjor',title='Bjorken X Distribution',nx=1920,ny=1080,cx=1,cy=1)
@@ -190,7 +214,7 @@ def makePlots():
   h['BjorXs'].SetFillStyle(3335)
   h['BjorXs'].SetFillColor(2)
   h['BjorXs'].Draw('same')
-  h['bjor'].Print(work_dir+'/Histograms/bjorkenX.pdf')
+  h['bjor'].Print('./Histograms/bjorkenX.pdf')
 
   #Inelasticity Y distribution
   ut.bookCanvas(h,key='inel',title='Inelasticity Y Distribution',nx=1920,ny=1080,cx=1,cy=1)
@@ -199,7 +223,7 @@ def makePlots():
   h['InelYs'].SetFillStyle(3335)
   h['InelYs'].SetFillColor(2)
   h['InelYs'].Draw('same')
-  h['inel'].Print(work_dir+'/Histograms/inelasticityY.pdf')
+  h['inel'].Print('./Histograms/inelasticityY.pdf')
 
   # Neutrino Interaction Points in X-Y-Z
   ut.bookCanvas(h,key='nutp',title='Transverse Plane Interactions',nx=1920,ny=720,cx=2,cy=1)
@@ -207,14 +231,14 @@ def makePlots():
   h['tp'].Draw('COLZ')
   cv = h['nutp'].cd(2)
   h['tpS'].Draw('COLZ')
-  h['nutp'].Print(work_dir+'/Histograms/nutplane.pdf')
+  h['nutp'].Print('./Histograms/nutplane.pdf')
   ut.bookCanvas(h,key='zaxis',title='Z Axis Interactions',nx=1920,ny=1080,cx=1,cy=1)
   cv = h['zaxis'].cd(1)
   h['za'].Draw()
   h['zaS'].SetFillStyle(3335)
   h['zaS'].SetFillColor(2)
   h['zaS'].Draw('same')
-  h['zaxis'].Print(work_dir+'/Histograms/nuZ.pdf')
+  h['zaxis'].Print('./Histograms/nuZ.pdf')
 
   #Angular Distribution of Neutrinos X-Y Scatter Plot
   ut.bookCanvas(h,key='CnuAng2D',title='Angular Distribution X-Y Scatter Plot',nx=1920,ny=1080,cx=2,cy=1)
@@ -227,7 +251,7 @@ def makePlots():
   h['d-nuAng2DFs'].Draw('COLZ')
   h['d-nuAng2DFs'].SetXTitle('mrad')
   h['d-nuAng2DFs'].SetYTitle('mrad')
-  h['CnuAng2D'].Print(work_dir+'/Histograms/CnuAng2D.pdf')
+  h['CnuAng2D'].Print('./Histograms/CnuAng2D.pdf')
 
   # Charmed Hadron Energy Spectrum
   ut.bookCanvas(h,key='dEnergyAnalysis',title='Produced Charmed Hadron Energies',nx=1920,ny=1080,cx=2,cy=2)
@@ -256,7 +280,7 @@ def makePlots():
   h['dC4ES'].SetFillStyle(3335)
   h['dC4ES'].SetFillColor(2)
   h['dC4ES'].Draw('same')
-  h['dEnergyAnalysis'].Print(work_dir+'/Histograms/dcenergy.pdf')
+  h['dEnergyAnalysis'].Print('./Histograms/dcenergy.pdf')
 
   # Charmed Hadron Flight Length
   ut.bookCanvas(h,key='dFLAnalysis',title='Produced Charmed Hadron Flight Lengths',nx=1920,ny=1080,cx=2,cy=2)
@@ -284,7 +308,7 @@ def makePlots():
   h['dC4FLS'].SetFillStyle(3335)
   h['dC4FLS'].SetFillColor(2)
   h['dC4FLS'].Draw('same')
-  h['dFLAnalysis'].Print(work_dir+'/Histograms/dcfl.pdf')
+  h['dFLAnalysis'].Print('./Histograms/dcfl.pdf')
 
   # Charmed Hadron Impact Parameter
   ut.bookCanvas(h,key='dIPAnalysis',title='Produced Charmed Hadron Impact Parameters',nx=1920,ny=1080,cx=2,cy=2)
@@ -312,7 +336,7 @@ def makePlots():
   h['dC4IPS'].SetFillStyle(3335)
   h['dC4IPS'].SetFillColor(2)
   h['dC4IPS'].Draw('same')
-  h['dIPAnalysis'].Print(work_dir+'/Histograms/dcip.pdf')
+  h['dIPAnalysis'].Print('./Histograms/dcip.pdf')
 
   # Charmed Hadron Kink and Opening Angle
   ut.bookCanvas(h,key='kAngle',title='Kink Angle',nx=1920,ny=540,cx=3,cy=1)
@@ -334,7 +358,7 @@ def makePlots():
   h['dC4KAS'].SetFillStyle(3335)
   h['dC4KAS'].SetFillColor(2)
   h['dC4KAS'].Draw('same')
-  h['kAngle'].Print(work_dir+'/Histograms/kAngle.pdf')
+  h['kAngle'].Print('./Histograms/kAngle.pdf')
   ut.bookCanvas(h,key='oAngle',title='Opening Angle',nx=1920,ny=1080,cx=1,cy=1)
   cv = h['oAngle'].cd(1)
   h['dC2OA'].Draw()
@@ -342,4 +366,6 @@ def makePlots():
   h['dC2OAS'].SetFillStyle(3335)
   h['dC2OAS'].SetFillColor(2)
   h['dC2OAS'].Draw('same')
-  h['oAngle'].Print(work_dir+'/Histograms/oAngle.pdf')
+  h['oAngle'].Print('./Histograms/oAngle.pdf')
+
+makePlots()
