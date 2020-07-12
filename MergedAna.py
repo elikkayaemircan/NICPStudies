@@ -66,28 +66,28 @@ ut.bookHist(h, 'g-nuEs', 'Neutrino Beam Energy #nu_{#mu}: Geometric Selection', 
 ut.bookHist(h, 'l-nuEs', 'Neutrino Beam Energy #nu_{#mu}: Location Selection',     60, 0, 300)
 ut.bookHist(h, 'd-nuEs', 'Neutrino Beam Energy #nu_{#mu}: Decay Search Selection', 60, 0, 300)
 # Incoming Neutrino Beam Energy Respect to Induced Charm Flavor
-ut.bookHist(h, 'nuE1',    'Neutrino Beam Energy #nu_{#mu}: Induces D{+}',                             60, 0, 300)
-ut.bookHist(h, 'nuE2',    'Neutrino Beam Energy #nu_{#mu}: Induces D{0}',                             60, 0, 300)
+ut.bookHist(h, 'nuE1',    'Neutrino Beam Energy #nu_{#mu}: Induces D^{+}',                             60, 0, 300)
+ut.bookHist(h, 'nuE2',    'Neutrino Beam Energy #nu_{#mu}: Induces D^{0}',                             60, 0, 300)
 ut.bookHist(h, 'nuE3',    'Neutrino Beam Energy #nu_{#mu}: Induces D_{s}^{0}',                        60, 0, 300)
 ut.bookHist(h, 'nuE4',    'Neutrino Beam Energy #nu_{#mu}: Induces L_{c}^{+}',                        60, 0, 300)
-ut.bookHist(h, 'd-nuEs1', 'Neutrino Beam Energy #nu_{#mu}: Decay Search Selection Induces D{+}',      60, 0, 300)
-ut.bookHist(h, 'd-nuEs2', 'Neutrino Beam Energy #nu_{#mu}: Decay Search Selection Induces D{0}',      60, 0, 300)
+ut.bookHist(h, 'd-nuEs1', 'Neutrino Beam Energy #nu_{#mu}: Decay Search Selection Induces D^{+}',      60, 0, 300)
+ut.bookHist(h, 'd-nuEs2', 'Neutrino Beam Energy #nu_{#mu}: Decay Search Selection Induces D^{0}',      60, 0, 300)
 ut.bookHist(h, 'd-nuEs3', 'Neutrino Beam Energy #nu_{#mu}: Decay Search Selection Induces D_{s}^{0}', 60, 0, 300)
 ut.bookHist(h, 'd-nuEs4', 'Neutrino Beam Energy #nu_{#mu}: Decay Search Selection Induces L_{c}^{+}', 60, 0, 300)
 # Multiplicity at Neutrino Vertex
-ut.bookHist(h, 'dC1M',  'Neutrino Multiplicity #nu_{#mu} Induces D{+}',                 15, 0, 15)
-ut.bookHist(h, 'dC1MS', 'Neutrino Multiplicity #nu_{#mu} Induces D{+} (Selected)',      15, 0, 15)
-ut.bookHist(h, 'dC2M',  'Neutrino Multiplicity #nu_{#mu} Induces D{0}',                 15, 0, 15)
-ut.bookHist(h, 'dC2MS', 'Neutrino Multiplicity #nu_{#mu} Induces D{0} (Selected)',      15, 0, 15)
+ut.bookHist(h, 'dC1M',  'Neutrino Multiplicity #nu_{#mu} Induces D^{+}',                 15, 0, 15)
+ut.bookHist(h, 'dC1MS', 'Neutrino Multiplicity #nu_{#mu} Induces D^{+} (Selected)',      15, 0, 15)
+ut.bookHist(h, 'dC2M',  'Neutrino Multiplicity #nu_{#mu} Induces D^{0}',                 15, 0, 15)
+ut.bookHist(h, 'dC2MS', 'Neutrino Multiplicity #nu_{#mu} Induces D^{0} (Selected)',      15, 0, 15)
 ut.bookHist(h, 'dC3M',  'Neutrino Multiplicity #nu_{#mu} Induces D_{s}^{+}',            15, 0, 15)
 ut.bookHist(h, 'dC3MS', 'Neutrino Multiplicity #nu_{#mu} Induces D_{s}^{+} (Selected)', 15, 0, 15)
 ut.bookHist(h, 'dC4M',  'Neutrino Multiplicity #nu_{#mu} Induces L_{c}^{+}',            15, 0, 15)
 ut.bookHist(h, 'dC4MS', 'Neutrino Multiplicity #nu_{#mu} Induces L_{c}^{+} (Selected)', 15, 0, 15)
 # Multiplicity at Charm Vertex
-ut.bookHist(h, 'dC1M2',  'Charmed Hadron Multiplicity D{+}',                 7, 0, 7)
-ut.bookHist(h, 'dC1M2S', 'Charmed Hadron Multiplicity D{+} (Selected)',      7, 0, 7)
-ut.bookHist(h, 'dC2M2',  'Charmed Hadron Multiplicity D{0}',                 7, 0, 7)
-ut.bookHist(h, 'dC2M2S', 'Charmed Hadron Multiplicity D{0} (Selected)',      7, 0, 7)
+ut.bookHist(h, 'dC1M2',  'Charmed Hadron Multiplicity D^{+}',                 7, 0, 7)
+ut.bookHist(h, 'dC1M2S', 'Charmed Hadron Multiplicity D^{+} (Selected)',      7, 0, 7)
+ut.bookHist(h, 'dC2M2',  'Charmed Hadron Multiplicity D^{0}',                 7, 0, 7)
+ut.bookHist(h, 'dC2M2S', 'Charmed Hadron Multiplicity D^{0} (Selected)',      7, 0, 7)
 ut.bookHist(h, 'dC3M2',  'Charmed Hadron Multiplicity D_{s}^{+}',            7, 0, 7)
 ut.bookHist(h, 'dC3M2S', 'Charmed Hadron Multiplicity D_{s}^{+} (Selected)', 7, 0, 7)
 ut.bookHist(h, 'dC4M2',  'Charmed Hadron Multiplicity L_{c}^{+}',            7, 0, 7)
@@ -110,41 +110,41 @@ ut.bookHist(h, 'd-nuAngDistYFs', 'Angular Distribution: Full Spectrum in Y-axis 
 ut.bookHist(h, 'nuAng2DF',       'Angular Distribution: Full Spectrum in X-Y',               240, -12, 12, 240, -12, 12)
 ut.bookHist(h, 'd-nuAng2DFs',    'Angular Distribution: Full Spectrum in X-Y (Selected)',    240, -12, 12, 240, -12, 12)
 # Charmed Hadron Energy Spectrum
-ut.bookHist(h, 'dC1E',  'Charmed Hadron Energy Spectrum D{+}',                 40, 0, 100)
-ut.bookHist(h, 'dC1ES', 'Charmed Hadron Energy Spectrum D{+} (Selected)',      40, 0, 100)
-ut.bookHist(h, 'dC2E',  'Charmed Hadron Energy Spectrum D{0}',                 40, 0, 100)
-ut.bookHist(h, 'dC2ES', 'Charmed Hadron Energy Spectrum D{0} (Selected)',      40, 0, 100)
+ut.bookHist(h, 'dC1E',  'Charmed Hadron Energy Spectrum D^{+}',                 40, 0, 100)
+ut.bookHist(h, 'dC1ES', 'Charmed Hadron Energy Spectrum D^{+} (Selected)',      40, 0, 100)
+ut.bookHist(h, 'dC2E',  'Charmed Hadron Energy Spectrum D^{0}',                 40, 0, 100)
+ut.bookHist(h, 'dC2ES', 'Charmed Hadron Energy Spectrum D^{0} (Selected)',      40, 0, 100)
 ut.bookHist(h, 'dC3E',  'Charmed Hadron Energy Spectrum D_{s}^{+}',            40, 0, 100)
 ut.bookHist(h, 'dC3ES', 'Charmed Hadron Energy Spectrum D_{s}^{+} (Selected)', 40, 0, 100)
 ut.bookHist(h, 'dC4E',  'Charmed Hadron Energy Spectrum L_{c}^{+}',            40, 0, 100)
 ut.bookHist(h, 'dC4ES', 'Charmed Hadron Energy Spectrum L_{c}^{+} (Selected)', 40, 0, 100)
 # Charmed Hadron Flight Length
-ut.bookHist(h, 'dC1FL',  'Charmed Hadron Flight Length D{+}',                 50, 0, 10)
-ut.bookHist(h, 'dC1FLS', 'Charmed Hadron Flight Length D{+} (Selected)',      50, 0, 10)
-ut.bookHist(h, 'dC2FL',  'Charmed Hadron Flight Length D{0}',                 50, 0, 10)
-ut.bookHist(h, 'dC2FLS', 'Charmed Hadron Flight Length D{0} (Selected)',      50, 0, 10)
+ut.bookHist(h, 'dC1FL',  'Charmed Hadron Flight Length D^{+}',                 50, 0, 10)
+ut.bookHist(h, 'dC1FLS', 'Charmed Hadron Flight Length D^{+} (Selected)',      50, 0, 10)
+ut.bookHist(h, 'dC2FL',  'Charmed Hadron Flight Length D^{0}',                 50, 0, 10)
+ut.bookHist(h, 'dC2FLS', 'Charmed Hadron Flight Length D^{0} (Selected)',      50, 0, 10)
 ut.bookHist(h, 'dC3FL',  'Charmed Hadron Flight Length D_{s}^{+}',            50, 0, 10)
 ut.bookHist(h, 'dC3FLS', 'Charmed Hadron Flight Length D_{s}^{+} (Selected)', 50, 0, 10)
 ut.bookHist(h, 'dC4FL',  'Charmed Hadron Flight Length L_{c}^{+}',            50, 0, 10)
 ut.bookHist(h, 'dC4FLS', 'Charmed Hadron Flight Length L_{c}^{+} (Selected)', 50, 0, 10)
 # Charmed Hadron Impact Parameter
-ut.bookHist(h, 'dC1IP',  'Charmed Hadron Impact Parameter D{+}',                 100, 0, 500)
-ut.bookHist(h, 'dC1IPS', 'Charmed Hadron Impact Parameter D{+} (Selected)',      100, 0, 500)
-ut.bookHist(h, 'dC2IP',  'Charmed Hadron Impact Parameter D{0}',                 100, 0, 500)
-ut.bookHist(h, 'dC2IPS', 'Charmed Hadron Impact Parameter D{0} (Selected)',      100, 0, 500)
+ut.bookHist(h, 'dC1IP',  'Charmed Hadron Impact Parameter D^{+}',                 100, 0, 500)
+ut.bookHist(h, 'dC1IPS', 'Charmed Hadron Impact Parameter D^{+} (Selected)',      100, 0, 500)
+ut.bookHist(h, 'dC2IP',  'Charmed Hadron Impact Parameter D^{0}',                 100, 0, 500)
+ut.bookHist(h, 'dC2IPS', 'Charmed Hadron Impact Parameter D^{0} (Selected)',      100, 0, 500)
 ut.bookHist(h, 'dC3IP',  'Charmed Hadron Impact Parameter D_{s}^{+}',            100, 0, 500)
 ut.bookHist(h, 'dC3IPS', 'Charmed Hadron Impact Parameter D_{s}^{+} (Selected)', 100, 0, 500)
 ut.bookHist(h, 'dC4IP',  'Charmed Hadron Impact Parameter L_{c}^{+}',            100, 0, 500)
 ut.bookHist(h, 'dC4IPS', 'Charmed Hadron Impact Parameter L_{c}^{+} (Selected)', 100, 0, 500)
 # Charmed Hadron Kink and Opening Angle
-ut.bookHist(h, 'dC1KA',  'Kink Angle at Charm Vertex D{+}',                 50, 0, 1)
-ut.bookHist(h, 'dC1KAS', 'Kink Angle at Charm Vertex D{+} (Selected)',      50, 0, 1)
+ut.bookHist(h, 'dC1KA',  'Kink Angle at Charm Vertex D^{+}',                 50, 0, 1)
+ut.bookHist(h, 'dC1KAS', 'Kink Angle at Charm Vertex D^{+} (Selected)',      50, 0, 1)
 ut.bookHist(h, 'dC3KA',  'Kink Angle at Charm Vertex D_{s}^{+}',            50, 0, 1)
 ut.bookHist(h, 'dC3KAS', 'Kink Angle at Charm Vertex D_{s}^{+} (Selected)', 50, 0, 1)
 ut.bookHist(h, 'dC4KA',  'Kink Angle at Charm Vertex L_{c}^{+}',            50, 0, 1)
 ut.bookHist(h, 'dC4KAS', 'Kink Angle at Charm Vertex L_{c}^{+} (Selected)', 50, 0, 1)
-ut.bookHist(h, 'dC2OA',  'Opening Angle at Charm Vertex D{0}',              50, 0, 1)
-ut.bookHist(h, 'dC2OAS', 'Opening Angle at Charm Vertex D{0} (Selected)',   50, 0, 1)
+ut.bookHist(h, 'dC2OA',  'Opening Angle at Charm Vertex D^{0}',              50, 0, 1)
+ut.bookHist(h, 'dC2OAS', 'Opening Angle at Charm Vertex D^{0} (Selected)',   50, 0, 1)
 
 
 """ Counters and inventories defined here. """
@@ -324,9 +324,11 @@ for event in xrange(nEnt):
         for c in xrange(len(CharmDaughter['P'])):
           CDSX = Slope( CharmDaughter['Px'][c], CharmDaughter['Pz'][c] )
           CDSY = Slope( CharmDaughter['Py'][c], CharmDaughter['Pz'][c] )
-          iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX, CDSY)*1e4     #in micro-m
           kA = KinkAngle(CSX, CSY, CDSX, CDSY)   #in rad
           oA = 2100
+          if fL <= 0.0408: iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX, CDSY)*1e4     #in micro-m
+          else: 
+            iP = 11.
           if DecaySearchSelection(fL, kA*1e3, iP, oA):
             DSS.append(True)
           else: DSS.append(False)
@@ -339,7 +341,9 @@ for event in xrange(nEnt):
         oA = OpeningAngle(CDSX[0], CDSY[0], CDSX[1], CDSY[1])   #in rad
         kA = 2100
         for e in xrange(2):
-            iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX[e], CDSY[e])*1e4     #in micro-m
+            if fL <= 0.0408: iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX[e], CDSY[e])*1e4     #in micro-m
+            else:
+              ip = 11.
             if DecaySearchSelection(fL, kA, iP, oA*1e3):
               DSS.append(True)
             else: DSS.append(False)
@@ -348,9 +352,12 @@ for event in xrange(nEnt):
         oA = 2100
         for d in xrange(len(CharmDaughter['PDG'])):
           if CharmDaughter['PDG'][d] not in Chargeless:
-            CDSX = Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d])
-            CDSY = Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d])
-            iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX, CDSY)*1e4     #in micro-m
+            if fL <= 0.0408:
+              CDSX = Slope(CharmDaughter['Px'][d],CharmDaughter['Pz'][d])
+              CDSY = Slope(CharmDaughter['Py'][d],CharmDaughter['Pz'][d])
+              iP = ImpactParameterV2(Neutrino['Pos'], Charm['Pos'], CDSX, CDSY)*1e4     #in micro-m
+            else:
+              iP = 11.
             if DecaySearchSelection(fL, kA, iP, oA):
               DSS.append(True)
             else: DSS.append(False)
