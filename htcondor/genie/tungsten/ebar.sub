@@ -1,0 +1,19 @@
+executable = /afs/cern.ch/user/e/eelikkay/NICPStudies/htcondor/genie/tungsten/genie.sh
+arguments = $(ClusterId) $(ProcId) ebar -12
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+getenv = true
+
+output = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/genie/tungsten/ebar/$(ClusterId)_$(ProcId).out
+error  = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/genie/tungsten/ebar/$(ClusterId)_$(ProcId).err
+log    = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/genie/tungsten/ebar/$(ClusterId)_$(ProcId).log
+
+requirements= (CERNEnvironment =!= "qa")
++JobFlavour = "nextweek"
+
+request_cpus = 1
+request_disk = 45MB
+request_memory = 90MB
+
+queue 150

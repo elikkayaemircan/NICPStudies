@@ -1,0 +1,18 @@
+executable = /afs/cern.ch/user/e/eelikkay/NICPStudies/htcondor/gspl/lead/gspl.sh
+arguments = $(ClusterId) $(ProcId) tau 16
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+output = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/gspl/lead/tau/$(ClusterId)_$(ProcId).out
+error  = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/gspl/lead/tau/$(ClusterId)_$(ProcId).err
+log    = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/gspl/lead/tau/$(ClusterId)_$(ProcId).log
+
+requirements= (CERNEnvironment =!= "qa")
++JobFlavour = "nextweek"
+
+request_cpus = 1
+request_disk = 20KB
+request_memory = 1MB
+
+queue 150

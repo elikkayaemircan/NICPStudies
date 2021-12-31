@@ -1,0 +1,18 @@
+executable = /afs/cern.ch/user/e/eelikkay/NICPStudies/htcondor/geant/below/geant.sh
+arguments = $(ClusterId) $(ProcId) ebar -12 415
+
+should_transfer_files = YES
+when_to_transfer_output = ON_EXIT
+
+output = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/geant/ebar/below/$(ClusterId)_$(ProcId).out
+error  = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/geant/ebar/below/$(ClusterId)_$(ProcId).err
+log    = /afs/cern.ch/work/e/eelikkay/NICPStudies/logs/geant/ebar/below/$(ClusterId)_$(ProcId).log
+
+requirements= (CERNEnvironment =!= "qa")
++JobFlavour = "nextweek"
+
+request_cpus = 1
+request_disk = 45MB
+request_memory = 90MB
+
+queue 150
